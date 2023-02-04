@@ -72,12 +72,20 @@ public class PlayerController : MonoBehaviour
     void Attack(InputAction.CallbackContext context) {
         if (canAttack) {
             Debug.Log("Coñazo");
+            // Set cooldowns
             canAttack = false;
             canMove = false;
             currentMovement = Vector2.zero;
-            anim.Play("Attack");
             StartCoroutine(MoveCooldown());
             StartCoroutine(AttackCooldown());
+
+            // Play Animation
+            anim.SetTrigger("Attack");
+
+            // Detect enemies in range
+
+            // Damage
+
         }
         return;
     }

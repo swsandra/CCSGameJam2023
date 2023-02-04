@@ -42,7 +42,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -115,7 +115,154 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: player_walk_down_0
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 17
+        width: 951
+        height: 828
+      alignment: 9
+      pivot: {x: 0.35035762, y: 0.18952169}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 35e99c74ce9dc184cb65e4b092e90375
+      internalID: 379495662
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: player_walk_down_1
+      rect:
+        serializedVersion: 2
+        x: 1032
+        y: 54
+        width: 960
+        height: 851
+      alignment: 9
+      pivot: {x: 0.4187074, y: 0.18712418}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cc837128ba9688440aaf6f9bedbb1918
+      internalID: -1748895503
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: player_walk_down_2
+      rect:
+        serializedVersion: 2
+        x: 2071
+        y: 83
+        width: 960
+        height: 783
+      alignment: 9
+      pivot: {x: 0.41870752, y: 0.10718631}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1df80028b0d9e8b4481b4fc61a887ee8
+      internalID: 1589208947
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: player_walk_down_3
+      rect:
+        serializedVersion: 2
+        x: 3148
+        y: 49
+        width: 950
+        height: 781
+      alignment: 9
+      pivot: {x: 0.34536776, y: 0.1355699}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d7fdfa8f80b0d6143af6d99bda497e41
+      internalID: 1117252107
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: player_walk_down_4
+      rect:
+        serializedVersion: 2
+        x: 4172
+        y: 45
+        width: 952
+        height: 797
+      alignment: 9
+      pivot: {x: 0.34569287, y: 0.14288594}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aa64c2e5aaa88cf4e87f4eb7c781253f
+      internalID: 1247556818
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: player_walk_down_5
+      rect:
+        serializedVersion: 2
+        x: 5200
+        y: 25
+        width: 965
+        height: 804
+      alignment: 9
+      pivot: {x: 0.3858292, y: 0.15741464}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9eb80f1e333671b46b24068284ae541b
+      internalID: 32896240
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: player_walk_down_6
+      rect:
+        serializedVersion: 2
+        x: 4427
+        y: 34
+        width: 8
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c66bb70cb7cc45b4eb1a518b6323e9b0
+      internalID: -1658326889
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -126,7 +273,14 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      player_walk_down_0: 379495662
+      player_walk_down_2: 1589208947
+      player_walk_down_4: 1247556818
+      player_walk_down_3: 1117252107
+      player_walk_down_5: 32896240
+      player_walk_down_6: -1658326889
+      player_walk_down_1: -1748895503
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

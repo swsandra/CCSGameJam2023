@@ -42,7 +42,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -115,7 +115,133 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: player_walk_up_0
+      rect:
+        serializedVersion: 2
+        x: 28
+        y: 10
+        width: 903
+        height: 830
+      alignment: 9
+      pivot: {x: 0.3098152, y: 0.18167411}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a7dd0b2bb2c8d1d45a1ed8516409ae11
+      internalID: -1896191578
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: player_walk_up_1
+      rect:
+        serializedVersion: 2
+        x: 991
+        y: 43
+        width: 902
+        height: 787
+      alignment: 9
+      pivot: {x: 0.36330575, y: 0.14190015}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 03bcf2e376e44f04abd5cad5f21bd59f
+      internalID: -111386510
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: player_walk_up_2
+      rect:
+        serializedVersion: 2
+        x: 1996
+        y: 90
+        width: 885
+        height: 791
+      alignment: 9
+      pivot: {x: 0.39053425, y: 0.10474198}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aa60bbe8e77e2a74c85df199cf04a9e4
+      internalID: 258980572
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: player_walk_up_3
+      rect:
+        serializedVersion: 2
+        x: 3014
+        y: 96
+        width: 867
+        height: 829
+      alignment: 9
+      pivot: {x: 0.3222341, y: 0.13879538}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2d11474d4ea33034fac5d202750670bb
+      internalID: 1304323666
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: player_walk_up_4
+      rect:
+        serializedVersion: 2
+        x: 3996
+        y: 31
+        width: 866
+        height: 879
+      alignment: 9
+      pivot: {x: 0.3016896, y: 0.17938052}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fe2e4c18d4ad31b4ab6681993a2a6231
+      internalID: 1463655711
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: player_walk_up_5
+      rect:
+        serializedVersion: 2
+        x: 5052
+        y: 22
+        width: 868
+        height: 850
+      alignment: 9
+      pivot: {x: 0.29707357, y: 0.13735805}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7e1120109d9dbfc47891f4b4c9e6f32e
+      internalID: 27849669
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -126,7 +252,13 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      player_walk_up_2: 258980572
+      player_walk_up_0: -1896191578
+      player_walk_up_1: -111386510
+      player_walk_up_3: 1304323666
+      player_walk_up_4: 1463655711
+      player_walk_up_5: 27849669
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

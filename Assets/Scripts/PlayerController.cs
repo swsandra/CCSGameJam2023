@@ -19,6 +19,10 @@ public class PlayerController : MonoBehaviour
     bool canMove = true;
 
     [Header("Attack")]
+    [SerializeField] Transform attackPoint;
+    [SerializeField] float attackOffset = 1f;
+    [SerializeField] float attackRange = 0.5f;
+    [SerializeField] LayerMask enemyLayers;
     [SerializeField] float attackDelay = 1f;
     [SerializeField] float moveDelay = .5f;
     bool canAttack = true;
@@ -47,15 +51,13 @@ public class PlayerController : MonoBehaviour
         if (canMove) {
             currentMovement = input.Player.Move.ReadValue<Vector2>();
         }
+    }
 
-        // Attack
-        // if (canAttack && input.Player.Fire.triggered) {
-        //     canAttack = false;
-        //     canMove = false;
-        //     Attack();
-        // }
+    void FixedUpdate() {
+        // Movement
+        rb.velocity = currentMovement * speed;
 
-        // Animations
+        // Move Animations
         if (currentMovement.x < 0) {
             spriteRenderer.flipX = true;
         } else if (currentMovement.x > 0){
@@ -63,10 +65,11 @@ public class PlayerController : MonoBehaviour
         }
         anim.SetFloat("Vertical", currentMovement.y);
         anim.SetFloat("Speed", currentMovement.sqrMagnitude);
-    }
 
-    void FixedUpdate() {
-        rb.velocity = currentMovement * speed;
+        // AttackPoint move and rotate
+        if (currentMovement.magnitude != 0 && canAttack) {
+            attackPoint.localPosition = currentMovement.normalized * attackOffset;
+        }
     }
 
     void Attack(InputAction.CallbackContext context) {
@@ -83,11 +86,21 @@ public class PlayerController : MonoBehaviour
             anim.SetTrigger("Attack");
 
             // Detect enemies in range
+            Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
 
             // Damage
-
+            foreach(Collider2D enemy in hitEnemies) {
+                Debug.Log("HIT: " + enemy.name);
+                // TODO: Do damage
+            }
         }
         return;
+    }
+
+    private void OnDrawGizmosSelected() {
+        if (attackPoint == null)
+            return;
+        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
     }
 
     IEnumerator AttackCooldown() {

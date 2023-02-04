@@ -26,10 +26,11 @@ public class BossController : MonoBehaviour
     [Space]
     [Header("Side Tentacles Attack")]
     [SerializeField]
-    GameObject[] spawns;
+    GameObject sideTentaclePrefab;
+    [SerializeField]    
+    Transform[] spawns;
 
     private void Start() {
-
     }
 
     [ContextMenu("ExpanseAttack")]
@@ -80,21 +81,23 @@ public class BossController : MonoBehaviour
     }
 
     [ContextMenu("SideTentaclesAttack")]
-    // IEnumerator SideTentaclesAttack() {
-    //     if (Random.Range(0,2) > 0) {
-    //         if (Random.Range(0,2) > 0) {
-    //             Instantiate
-    //         } else {
+    void SideTentaclesAttack() {
+        StartCoroutine(SideTentaclesCoroutine());
+    }
+    IEnumerator SideTentaclesCoroutine() {
+        bool up = Random.Range(0,2) > 0;
+        int firstSide = Random.Range(0,2);
+        int secondSide = Random.Range(0,2);
 
-    //         }
-    //     } else {
-    //         if (Random.Range(0,2) > 0) {
-                
-    //         } else {
+        int direction = firstSide == 0 ? 1 : -1;
+        GameObject first = Instantiate(sideTentaclePrefab,spawns[2 * (up ? 1 : 0) + firstSide].position, Quaternion.Euler(0,0, -direction * 90));
+        first.GetComponent<SideTentacle>().direction = direction;
 
-    //         }
-    //     }
-    // }
+        yield return new WaitForSeconds(3);
+        direction = secondSide == 0 ? 1 : -1;
+        GameObject second = Instantiate(sideTentaclePrefab,spawns[2 * (!up ? 1 : 0) + secondSide].position, Quaternion.Euler(0,0,-direction * 90));
+        second.GetComponent<SideTentacle>().direction = direction;
+    }
 
     private void Update() {
         if (rotate) {

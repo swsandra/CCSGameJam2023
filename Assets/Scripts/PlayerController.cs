@@ -113,7 +113,8 @@ public class PlayerController : MonoBehaviour
             // Damage
             foreach(Collider2D enemy in hitEnemies) {
                 Debug.Log("HIT: " + enemy.name);
-                // TODO: Do damage
+                enemy.gameObject.GetComponent<Root>().Damage();
+                // TODO: Fix for tree
             }
         }
     }

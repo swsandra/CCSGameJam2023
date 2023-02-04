@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RootGrowingAttack : MonoBehaviour
+public class BossController : MonoBehaviour
 {
     [SerializeField]
     GameObject rootPrefab;
     [SerializeField]
     bool finalPhase;
+    [Header("Root Expansion Attack")]
     [Header("Division")]
     [SerializeField]
     int maxDivides = 5;
@@ -22,13 +23,17 @@ public class RootGrowingAttack : MonoBehaviour
     int rotationDuration = 10;
     float rotationDirection = 1;
     bool rotate;
+    [Space]
+    [Header("Side Tentacles Attack")]
+    [SerializeField]
+    GameObject[] spawns;
 
     private void Start() {
-        Attack();
+
     }
 
-    [ContextMenu("atacar")]
-    void Attack() {
+    [ContextMenu("ExpanseAttack")]
+    void ExpanseAttack() {
         Transform baseRoot1 = Instantiate(rootPrefab, pivot.transform.position, Quaternion.Euler(0,0,180 - Random.Range(20, 45)), pivot).transform;
         StartCoroutine(Expand(0, baseRoot1));
         Transform baseRoot2 = Instantiate(rootPrefab, pivot.transform.position, Quaternion.Euler(0,0,180 + Random.Range(20, 45)), pivot).transform;
@@ -60,20 +65,36 @@ public class RootGrowingAttack : MonoBehaviour
         }
     }
 
-    IEnumerator Contract(Transform branch){
+    IEnumerator Contract(Transform branch) {
         Transform parent = branch.parent;
         branch.GetComponent<Animator>().Play("RootContraction");
         yield return new WaitForSeconds(divideCooldown);
         Destroy(branch.gameObject);
-        if (parent.name == "Pivot") {
+        if (parent.name == "ExpansionPivot") {
             rotate = false;
             pivot.Rotate(Vector3.zero);
             yield break;
-        }
-        if (parent) {
+        } else {
            StartCoroutine(Contract(parent));
         }
     }
+
+    [ContextMenu("SideTentaclesAttack")]
+    // IEnumerator SideTentaclesAttack() {
+    //     if (Random.Range(0,2) > 0) {
+    //         if (Random.Range(0,2) > 0) {
+    //             Instantiate
+    //         } else {
+
+    //         }
+    //     } else {
+    //         if (Random.Range(0,2) > 0) {
+                
+    //         } else {
+
+    //         }
+    //     }
+    // }
 
     private void Update() {
         if (rotate) {

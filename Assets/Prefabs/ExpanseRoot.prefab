@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 1189863883}
   - component: {fileID: 1189863886}
   m_Layer: 0
-  m_Name: root_alone
+  m_Name: ExpanseRoot
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

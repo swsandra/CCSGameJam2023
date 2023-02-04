@@ -10,25 +10,39 @@ public class Root : MonoBehaviour
     [SerializeField] float idleDuration = 3f;
     [SerializeField] float deathDuration;
 
+    [Header("Damage")]
+    [SerializeField] float flashDuration = .09f;
+    [SerializeField] Material flashMaterial;
+    Material originalMaterial;
+
     // Start is called before the first frame update
     void Start()
     {
         anim = GetComponent<Animator>();
         sr = GetComponent<SpriteRenderer>();
+        originalMaterial = sr.material;
     }
 
     public void Damage() {
         health -= 1;
         if (health <= 0) {
-            StopCoroutine(Hide());
+            StopCoroutine(HideRoutine());
             GetComponent<Animator>().enabled = false;
-            StartCoroutine(Die());
-            return;
+            StartCoroutine(DieRoutine());
         }
-        // TODO: Feedback
+        else {
+            StartCoroutine(damageRoutine());
+            // TODO: Feedback
+        }
     }
 
-    IEnumerator Die() {
+    IEnumerator damageRoutine() {
+        sr.material = flashMaterial;
+        yield return new WaitForSeconds(flashDuration);
+        sr.material = originalMaterial;
+    }
+
+    IEnumerator DieRoutine() {
         float t = 0f;
         while(t < 1) {
             sr.material.color = Color.Lerp(Color.white, Color.black, t);
@@ -40,7 +54,7 @@ public class Root : MonoBehaviour
         Destroy(gameObject);
     }
 
-    IEnumerator Hide() {
+    IEnumerator HideRoutine() {
         yield return new WaitForSeconds(idleDuration);
         anim.SetTrigger("Hide");
         yield return new WaitForSeconds(.5f);
@@ -48,7 +62,7 @@ public class Root : MonoBehaviour
     }
 
     private void OnEnable() {
-        StartCoroutine(Hide());
+        StartCoroutine(HideRoutine());
     }
 
     private void OnDisable() {

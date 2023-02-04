@@ -18,6 +18,12 @@ public class PlayerController : MonoBehaviour
     bool invulnerable = false;
     [SerializeField] float invulnerableDuration = 1f;
 
+    [Header("Damage")]
+    [SerializeField] float flashDuration = .09f;
+    [SerializeField] Sprite hitSprite;
+    [SerializeField] Material flashMaterial;
+    Material originalMaterial;
+
     [Header("Movement")]
     [SerializeField] float speed = 1f;
     Vector2 currentMovement;
@@ -48,6 +54,7 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        originalMaterial = spriteRenderer.material;
     }
 
     // Update is called once per frame
@@ -89,9 +96,9 @@ public class PlayerController : MonoBehaviour
                 return;
                 //TODO: TRIGGER GAME OVER
             }
-            // TODO: TRIGGER ANIMATION/EFFECT
             invulnerable = true;
             StartCoroutine(InvulnerableCooldown());
+            StartCoroutine(flashRoutine());
             StartCoroutine(DamageAnimationCooldown());
         }
     }
@@ -142,10 +149,21 @@ public class PlayerController : MonoBehaviour
         Gizmos.DrawWireSphere(attackPoint.position, attackRange);
     }
 
+    IEnumerator flashRoutine() {
+        spriteRenderer.color = Color.red;
+        spriteRenderer.material = flashMaterial;
+        yield return new WaitForSeconds(flashDuration);
+        spriteRenderer.color = Color.white;
+        spriteRenderer.material = originalMaterial;
+    }
+
     IEnumerator DamageAnimationCooldown() {
+        anim.enabled = false;
+        spriteRenderer.sprite = hitSprite;
         yield return new WaitForSeconds(moveDelay);
         canMove = true;
         canAttack = true;
+        anim.enabled = true;
     }
 
     IEnumerator InvulnerableCooldown() {

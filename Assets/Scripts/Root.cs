@@ -11,7 +11,7 @@ public class Root : MonoBehaviour
     [SerializeField] float deathDuration;
 
     [Header("Damage")]
-    [SerializeField] float flashDuration = .5f;
+    [SerializeField] float flashDuration = .09f;
     [SerializeField] Material flashMaterial;
     Material originalMaterial;
 

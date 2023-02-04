@@ -157,6 +157,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   invulnerableDuration: 1
+  flashDuration: 0.09
+  hitSprite: {fileID: 21300000, guid: cd1177cb1c201584e865e9ab0722de2c, type: 3}
+  flashMaterial: {fileID: 0}
   speed: 5
   attackPoint: {fileID: 1021951936}
   attackOffset: 1

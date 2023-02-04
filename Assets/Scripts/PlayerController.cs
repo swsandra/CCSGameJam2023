@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float attackDelay = 1f;
     [SerializeField] float moveDelay = .5f;
     bool canAttack = true;
+    float bossAttack = 0f;
 
 
     private void Awake() {
@@ -73,7 +74,7 @@ public class PlayerController : MonoBehaviour
 
         // AttackPoint move and rotate
         if (currentMovement.magnitude != 0 && canAttack) {
-            attackPoint.localPosition = currentMovement.normalized * attackOffset;
+            attackPoint.localPosition = new Vector3(spriteRenderer.flipX ? -1 : 1, bossAttack, 0).normalized * attackOffset;
         }
     }
 
@@ -95,6 +96,20 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter2D(Collider2D other) {
+        Debug.Log("TriggerEnter");
+        if (other.gameObject.tag == "BossTrigger") {
+            bossAttack = 1f;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other) {
+        Debug.Log("TriggerExit");
+        if (other.gameObject.tag == "BossTrigger") {
+            bossAttack = 0f;
+        }
+    }
+
     void Attack(InputAction.CallbackContext context) {
         if (canAttack) {
             // Set cooldowns
@@ -113,8 +128,10 @@ public class PlayerController : MonoBehaviour
             // Damage
             foreach(Collider2D enemy in hitEnemies) {
                 Debug.Log("HIT: " + enemy.name);
-                enemy.gameObject.GetComponent<Root>().Damage();
-                // TODO: Fix for tree
+                // if (enemy.name == "Boss")
+                //     enemy.gameObject.GetComponent<BossController>().Damage();
+                // else
+                    enemy.gameObject.GetComponent<Root>().Damage();
             }
         }
     }

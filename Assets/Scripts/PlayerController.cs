@@ -13,6 +13,11 @@ public class PlayerController : MonoBehaviour
     PlayerInput input;
     SpriteRenderer spriteRenderer;
 
+    [Header("Health")]
+    int health = 3;
+    bool invulnerable = false;
+    [SerializeField] float invulnerableDuration = 1f;
+
     [Header("Movement")]
     [SerializeField] float speed = 1f;
     Vector2 currentMovement;
@@ -72,9 +77,26 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnCollisionEnter2D(Collision2D other) {
+        if (!invulnerable && other.gameObject.tag == "Enemy") {
+            health -= 1;
+            Debug.Log(health);
+            canMove = false;
+            canAttack = false;
+            currentMovement = Vector2.zero;
+            if (health <= 0) {
+                return;
+                //TODO: TRIGGER GAME OVER
+            }
+            // TODO: TRIGGER ANIMATION/EFFECT
+            invulnerable = true;
+            StartCoroutine(InvulnerableCooldown());
+            StartCoroutine(DamageAnimationCooldown());
+        }
+    }
+
     void Attack(InputAction.CallbackContext context) {
         if (canAttack) {
-            Debug.Log("Coñazo");
             // Set cooldowns
             canAttack = false;
             canMove = false;
@@ -94,7 +116,6 @@ public class PlayerController : MonoBehaviour
                 // TODO: Do damage
             }
         }
-        return;
     }
 
     private void OnDrawGizmosSelected() {
@@ -103,9 +124,19 @@ public class PlayerController : MonoBehaviour
         Gizmos.DrawWireSphere(attackPoint.position, attackRange);
     }
 
+    IEnumerator DamageAnimationCooldown() {
+        yield return new WaitForSeconds(moveDelay);
+        canMove = true;
+        canAttack = true;
+    }
+
+    IEnumerator InvulnerableCooldown() {
+        yield return new WaitForSeconds(invulnerableDuration);
+        invulnerable = false;
+    }
+
     IEnumerator AttackCooldown() {
         yield return new WaitForSeconds(attackDelay);
-        anim.SetBool("Attack", false);
         canAttack = true;
     }
 

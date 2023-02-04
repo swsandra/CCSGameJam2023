@@ -16,14 +16,20 @@ public class PlayerController : MonoBehaviour
     [Header("Movement")]
     [SerializeField] float speed = 1f;
     Vector2 currentMovement;
+    bool canMove = true;
+
+    [Header("Attack")]
+    [SerializeField] float attackDelay = 1f;
+    [SerializeField] float moveDelay = .5f;
+    bool canAttack = true;
 
 
     private void Awake() {
         input = new PlayerInput();
 
-        // input.Player.Move.performed += ctx => {
-        //    currentMovement = ctx.ReadValue<Vector2>();
-        // };
+        // input.Player.Move.performed += Movement;
+
+        input.Player.Fire.performed += Attack;
     }
 
     // Start is called before the first frame update
@@ -37,7 +43,17 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        currentMovement = input.Player.Move.ReadValue<Vector2>();
+        // Movement
+        if (canMove) {
+            currentMovement = input.Player.Move.ReadValue<Vector2>();
+        }
+
+        // Attack
+        // if (canAttack && input.Player.Fire.triggered) {
+        //     canAttack = false;
+        //     canMove = false;
+        //     Attack();
+        // }
 
         // Animations
         if (currentMovement.x < 0) {
@@ -51,6 +67,30 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate() {
         rb.velocity = currentMovement * speed;
+    }
+
+    void Attack(InputAction.CallbackContext context) {
+        if (canAttack) {
+            Debug.Log("Coñazo");
+            canAttack = false;
+            canMove = false;
+            currentMovement = Vector2.zero;
+            anim.Play("Attack");
+            StartCoroutine(MoveCooldown());
+            StartCoroutine(AttackCooldown());
+        }
+        return;
+    }
+
+    IEnumerator AttackCooldown() {
+        yield return new WaitForSeconds(attackDelay);
+        anim.SetBool("Attack", false);
+        canAttack = true;
+    }
+
+    IEnumerator MoveCooldown() {
+        yield return new  WaitForSeconds(moveDelay);
+        canMove = true;
     }
 
     private void OnEnable() {

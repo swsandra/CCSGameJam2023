@@ -10,6 +10,10 @@ public class BossController : MonoBehaviour
     GameObject rootPrefab;
     [SerializeField]
     bool finalPhase;
+    [Space]
+    [Header("Sounds")]
+    [SerializeField]
+    AudioSource earthquakeSource;
     [Header("Root Expansion Attack")]
     [Header("Division")]
     [SerializeField]
@@ -47,7 +51,6 @@ public class BossController : MonoBehaviour
             if (tentaclesDefeated >= tentaclesNeeded) {
                 if (tentacleCoroutine != null)
                     StartCoroutine(LastTentacleCoroutine());
-                    FindObjectOfType<CameraScript>().StopRumbling();
                     StopCoroutine(tentacleCoroutine);
                 // StartCoroutine(HideTentacles)
             }
@@ -193,6 +196,7 @@ public class BossController : MonoBehaviour
 
     IEnumerator TentaclesAttackCoroutine() {
         FindObjectOfType<CameraScript>().StartRumbling();
+        earthquakeSource.Play();
         float tentDuration = tentacles[0].GetComponent<Root>().idleDuration;
 
         for(int i = 0; i < tentacleRounds; i++) {
@@ -210,6 +214,7 @@ public class BossController : MonoBehaviour
         }
         TentaclesDefeated = 0;
         FindObjectOfType<CameraScript>().StopRumbling();
+        earthquakeSource.Stop();
     }
 
     IEnumerator LastTentacleCoroutine() {
@@ -218,6 +223,8 @@ public class BossController : MonoBehaviour
         yield return new WaitForSeconds(1);
         Time.timeScale = 1;
         FindObjectOfType<CameraScript>().ZoomOut();
+        earthquakeSource.Stop();
+        FindObjectOfType<CameraScript>().StopRumbling();
     }
 
     void DivideRegions(){

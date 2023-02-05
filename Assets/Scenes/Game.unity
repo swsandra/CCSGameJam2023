@@ -4509,7 +4509,7 @@ MonoBehaviour:
   pusher: {fileID: 1173661286}
   pusherFinalPosition: {x: 0, y: -2, z: 0}
   pusherDuration: 1
-  damagePhaseDuration: 6
+  damagePhaseDuration: 7
   canAttack: 0
   attackCooldown: 3
   attacksBeforeTentacles: 3

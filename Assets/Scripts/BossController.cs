@@ -515,8 +515,7 @@ public class BossController : MonoBehaviour
         Debug.Log("Continue current phase "+phase);
         StartCoroutine(damageRoutine());
         if (health == 0) {
-            Death();
-            GameManager.instance.Win();
+            StartCoroutine(Death());
         }else if (health <= healthPerPhase && phase == 2){ // Third phase
             ThirdPhase();
         }else if (health <= healthPerPhase*2 && phase == 1){ // Second phase
@@ -534,11 +533,18 @@ public class BossController : MonoBehaviour
         StopAllCoroutines();
     }
 
-    void Death(){
+    IEnumerator Death(){
         invulnerable = true;
+        Time.timeScale = 0.5f;
+        FindObjectOfType<CameraScript>().ZoomIn();
+        lastTentacle.Play();
+        yield return new WaitForSeconds(1);
+        Time.timeScale = 1;
+        FindObjectOfType<CameraScript>().ZoomOut();
+        GameManager.instance.Win();
         ShowDeadFace();
         GameEnds();
-    }
+    } 
 
     private void Update() {
         if (rotate) {

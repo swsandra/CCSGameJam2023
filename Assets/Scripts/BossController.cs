@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+using Cinemachine;
 
 public class BossController : MonoBehaviour
 {
@@ -45,8 +46,8 @@ public class BossController : MonoBehaviour
             tentaclesDefeated = value;
             if (tentaclesDefeated >= tentaclesNeeded) {
                 if (tentacleCoroutine != null)
-                    Time.timeScale = 0.5f;
-                    FindObjectOfType<CameraScript>().ZoomIn();
+                    StartCoroutine(LastTentacleCoroutine());
+                    FindObjectOfType<CameraScript>().StopRumbling();
                     StopCoroutine(tentacleCoroutine);
                 // StartCoroutine(HideTentacles)
             }
@@ -106,7 +107,6 @@ public class BossController : MonoBehaviour
     GameObject NoWater;
     [SerializeField]
     float lakeDuration;
-
 
     private void Start() {
         DivideRegions();
@@ -192,6 +192,7 @@ public class BossController : MonoBehaviour
     }
 
     IEnumerator TentaclesAttackCoroutine() {
+        FindObjectOfType<CameraScript>().StartRumbling();
         float tentDuration = tentacles[0].GetComponent<Root>().idleDuration;
 
         for(int i = 0; i < tentacleRounds; i++) {
@@ -208,6 +209,15 @@ public class BossController : MonoBehaviour
             tent.GetComponent<Root>().health = tentaclesHealth;
         }
         TentaclesDefeated = 0;
+        FindObjectOfType<CameraScript>().StopRumbling();
+    }
+
+    IEnumerator LastTentacleCoroutine() {
+        Time.timeScale = 0.5f;
+        FindObjectOfType<CameraScript>().ZoomIn();
+        yield return new WaitForSeconds(1);
+        Time.timeScale = 1;
+        FindObjectOfType<CameraScript>().ZoomOut();
     }
 
     void DivideRegions(){

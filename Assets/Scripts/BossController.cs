@@ -8,8 +8,16 @@ public class BossController : MonoBehaviour
 {
     [SerializeField]
     GameObject rootPrefab;
+    SpriteRenderer sr;
     [SerializeField]
-    bool finalPhase;
+    int phase;
+    [Space]
+    [Header("Damage")]
+    public int health = 15;
+    [SerializeField] float flashDuration = .09f;
+    [SerializeField] Material flashMaterial;
+    Material originalMaterial;
+    int healthPerPhase = 15;
     [Header("Root Expansion Attack")]
     [Header("Division")]
     [SerializeField]
@@ -109,9 +117,13 @@ public class BossController : MonoBehaviour
     float lakeDuration;
 
     private void Start() {
+        phase = 1;
+        healthPerPhase = health/3;
         DivideRegions();
         faceSpriteRenderer = face.GetComponent<SpriteRenderer>();
         face.transform.position = faceFinalPosition.position + (Vector3.up * topBound);
+        sr = GetComponent<SpriteRenderer>();
+        originalMaterial = sr.material;
     }
 
     [ContextMenu("ExpanseAttack")]
@@ -125,7 +137,7 @@ public class BossController : MonoBehaviour
     IEnumerator Expand(int recursion, Transform father) {
         if (recursion == maxDivides) {
             yield return new WaitForSeconds(2);
-            if(finalPhase){
+            if(phase == 3){
                 rotate = true;
                 yield return new WaitForSeconds(rotationDuration);
             }
@@ -309,15 +321,15 @@ public class BossController : MonoBehaviour
     [ContextMenu("ShowHappyFace")]
     void ShowHappyFace(){
         faceSpriteRenderer.sprite = happyFaceSprite;
-        face.transform.position = faceFinalPosition.position + (Vector3.up * topBound);
-        StartCoroutine(MoveFaceCoroutine(face.transform.position, faceFinalPosition.position, moveDuration));
+        // face.transform.position = faceFinalPosition.position + (Vector3.up * topBound);
+        // StartCoroutine(MoveFaceCoroutine(face.transform.position, faceFinalPosition.position, moveDuration));
     }
 
     [ContextMenu("ShowDeadFace")]
     void ShowDeadFace(){
         faceSpriteRenderer.sprite = deadFaceSprite;
-        face.transform.position = faceFinalPosition.position + (Vector3.up * topBound);
-        StartCoroutine(MoveFaceCoroutine(face.transform.position, faceFinalPosition.position, moveDuration));
+        // face.transform.position = faceFinalPosition.position + (Vector3.up * topBound);
+        // StartCoroutine(MoveFaceCoroutine(face.transform.position, faceFinalPosition.position, moveDuration));
     }
 
     IEnumerator MoveFaceCoroutine(Vector3 startPos, Vector3 endPos, float duration) {
@@ -334,13 +346,15 @@ public class BossController : MonoBehaviour
 
     [ContextMenu("SecondPhase")]
     void SecondPhase(){
-        faceSpriteRenderer.sprite = angryFaceSprite;
+        phase = 2;
+        StartCoroutine(HideWeakFaceCoroutine());
         ShowMidWater();
     }
 
     [ContextMenu("ThirdPhase")]
     void ThirdPhase(){
-        faceSpriteRenderer.sprite = angryFaceSprite;
+        phase = 3;
+        StartCoroutine(HideWeakFaceCoroutine());
         ShowNoWater();
     }
 
@@ -352,6 +366,34 @@ public class BossController : MonoBehaviour
     [ContextMenu("ShowNoWater")]
     void ShowNoWater(){
         StartCoroutine(lakeDuration.Tweeng((a)=>NoWater.GetComponent<SpriteRenderer>().color += new Color (0, 0, 0, a), 0f, 1f));
+    }
+
+    [ContextMenu("TakeDamage")]
+    public void Damage() {
+        health -= 1;
+        if (health < 0) {
+            return;
+        }
+        // healthBar.localScale = new Vector3((float)health / boss.tentaclesHealth, healthBar.localScale.y, healthBar.localScale.z);
+        Debug.Log("Continue current phase "+phase);
+        StartCoroutine(damageRoutine());
+        if (health == 0) {
+            Death();
+        }else if (health <= healthPerPhase && phase == 2){ // Third phase
+            ThirdPhase();
+        }else if (health <= healthPerPhase*2 && phase == 1){ // Second phase
+            SecondPhase();
+        }
+    }
+
+    IEnumerator damageRoutine() {
+        sr.material = flashMaterial;
+        yield return new WaitForSeconds(flashDuration);
+        sr.material = originalMaterial;
+    }
+
+    void Death(){
+        ShowDeadFace();
     }
 
     private void Update() {

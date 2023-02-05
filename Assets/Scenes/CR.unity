@@ -275,7 +275,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 323423350}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -11.12, y: -1.64, z: 0}
+  m_LocalPosition: {x: -7.35, y: -4.8, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -332,6 +332,10 @@ PrefabInstance:
     - target: {fileID: 5445028310631620889, guid: dd6b53977c9e2a8428192d67425bb156, type: 3}
       propertyPath: m_Name
       value: Enemy (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5445028310631620889, guid: dd6b53977c9e2a8428192d67425bb156, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5445028310631620893, guid: dd6b53977c9e2a8428192d67425bb156, type: 3}
       propertyPath: m_RootOrder
@@ -395,7 +399,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &518625386
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -455,6 +459,10 @@ PrefabInstance:
     - target: {fileID: 5445028310631620889, guid: dd6b53977c9e2a8428192d67425bb156, type: 3}
       propertyPath: m_Name
       value: Enemy (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5445028310631620889, guid: dd6b53977c9e2a8428192d67425bb156, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5445028310631620893, guid: dd6b53977c9e2a8428192d67425bb156, type: 3}
       propertyPath: m_RootOrder
@@ -551,6 +559,10 @@ PrefabInstance:
     - target: {fileID: 5445028310631620889, guid: dd6b53977c9e2a8428192d67425bb156, type: 3}
       propertyPath: m_Name
       value: Enemy (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5445028310631620889, guid: dd6b53977c9e2a8428192d67425bb156, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5445028310631620893, guid: dd6b53977c9e2a8428192d67425bb156, type: 3}
       propertyPath: m_RootOrder
@@ -724,9 +736,16 @@ MonoBehaviour:
   pivot: {fileID: 646516961}
   rotationSpeed: 0.2
   rotationDuration: 10
+  sideTentaclePrefab: {fileID: 0}
   spawns: []
+  sideTentacleSpeed: 0
+  movementTime: 0
+  idleTime: 0
   tentaclesDefeated: 0
-  tentaclesNeeded: 5
+  tentaclesNeeded: 3
+  tentaclesHealth: 3
+  tentacleRounds: 3
+  tentacleSpawnDelay: 5
   tentacles:
   - {fileID: 66271285}
   - {fileID: 1014904696}
@@ -735,7 +754,6 @@ MonoBehaviour:
   - {fileID: 325421815}
   bottomLeft: {fileID: 1906960662}
   topRight: {fileID: 1544426214}
-  tentaclesHealth: 3
 --- !u!212 &1017228762
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -957,6 +975,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 5445028310631620889, guid: dd6b53977c9e2a8428192d67425bb156, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5445028310631620893, guid: dd6b53977c9e2a8428192d67425bb156, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -1017,7 +1039,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5445028310631620867, guid: dd6b53977c9e2a8428192d67425bb156, type: 3}
       propertyPath: health
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5445028310631620867, guid: dd6b53977c9e2a8428192d67425bb156, type: 3}
       propertyPath: deathDuration

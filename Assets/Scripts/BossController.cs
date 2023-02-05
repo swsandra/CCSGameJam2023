@@ -29,6 +29,13 @@ public class BossController : MonoBehaviour
     GameObject sideTentaclePrefab;
     [SerializeField]    
     Transform[] spawns;
+    [SerializeField]
+    float sideTentacleSpeed;
+    [SerializeField]
+    float movementTime;
+    [SerializeField]
+    float idleTime;
+
 
     private void Start() {
     }
@@ -92,11 +99,17 @@ public class BossController : MonoBehaviour
         int direction = firstSide == 0 ? 1 : -1;
         GameObject first = Instantiate(sideTentaclePrefab,spawns[2 * (up ? 1 : 0) + firstSide].position, Quaternion.Euler(0,0, -direction * 90));
         first.GetComponent<SideTentacle>().direction = direction;
+        first.GetComponent<SideTentacle>().speed = sideTentacleSpeed;
+        first.GetComponent<SideTentacle>().movementTime = movementTime;
+        first.GetComponent<SideTentacle>().idleTime = idleTime;
 
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(2);
         direction = secondSide == 0 ? 1 : -1;
         GameObject second = Instantiate(sideTentaclePrefab,spawns[2 * (!up ? 1 : 0) + secondSide].position, Quaternion.Euler(0,0,-direction * 90));
         second.GetComponent<SideTentacle>().direction = direction;
+        second.GetComponent<SideTentacle>().speed = sideTentacleSpeed;
+        second.GetComponent<SideTentacle>().movementTime = movementTime;
+        second.GetComponent<SideTentacle>().idleTime = idleTime;
     }
 
     private void Update() {

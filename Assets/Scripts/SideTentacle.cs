@@ -6,8 +6,9 @@ public class SideTentacle : MonoBehaviour
 {
 
     public int direction;
-    [SerializeField]
-    float speed;
+    public float speed;
+    public float movementTime;
+    public float idleTime;
 
     void Start()
     {
@@ -22,11 +23,11 @@ public class SideTentacle : MonoBehaviour
 
     IEnumerator TentacleMovement() {
         int initialDirection = direction;
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(movementTime);
         direction = 0;
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(idleTime);
         direction = initialDirection * -1;
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(movementTime);
         Destroy(gameObject);
     }
 }

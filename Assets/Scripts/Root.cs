@@ -30,15 +30,16 @@ public class Root : MonoBehaviour
     }
 
     public void Damage() {
-        health = Mathf.Clamp(health-1, 0, boss.tentaclesHealth);
+        health -= 1;
+        if (health < 0) {
+            return;
+        }
+        health = Mathf.Clamp(health, 0, boss.tentaclesHealth);
         healthBar.localScale = new Vector3((float)health / boss.tentaclesHealth, healthBar.localScale.y, healthBar.localScale.z);
-        if (health == 0) {
+        if (health <= 0) {
             StopAllCoroutines();
             GetComponent<Animator>().enabled = false;
             StartCoroutine(DieRoutine());
-        }
-        else if (health < 0) {
-            return;
         }
         else {
             StartCoroutine(damageRoutine());

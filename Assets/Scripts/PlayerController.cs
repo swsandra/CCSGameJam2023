@@ -95,12 +95,16 @@ public class PlayerController : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D other) {
         if (!invulnerable && other.gameObject.tag == "Enemy") {
             shakeCamera();
-            health -= 1;
+            health = Mathf.Clamp(health-1, 0, 3);
             Debug.Log(health);
             canMove = false;
             canAttack = false;
             currentMovement = Vector2.zero;
             if (health <= 0) {
+                StartCoroutine(flashRoutine());
+                anim.enabled = false;
+                GetComponent<Collider2D>().enabled = false;
+                spriteRenderer.sprite = hitSprite;
                 return;
                 //TODO: TRIGGER GAME OVER
             }

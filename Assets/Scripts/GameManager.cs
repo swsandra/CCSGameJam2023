@@ -14,6 +14,10 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     AudioClip GameSongLoop;
     [SerializeField]
+    AudioClip WinSong;
+    [SerializeField]
+    AudioClip FailSong;
+    [SerializeField]
     GameObject Boss;
     [SerializeField]
     GameObject Player;
@@ -41,6 +45,8 @@ public class GameManager : MonoBehaviour
     public void Win()
     {
         Player.GetComponent<PlayerController>().enabled = false;
+        GetComponent<AudioSource>().clip = WinSong;
+        GetComponent<AudioSource>().Play();
         Boss.GetComponent<BossController>().GameEnds();
         UIManager.instance.ShowWin();
     }
@@ -49,6 +55,8 @@ public class GameManager : MonoBehaviour
     {
         Boss.GetComponent<BossController>().ShowHappyFace();
         Boss.GetComponent<BossController>().GameEnds();
+        GetComponent<AudioSource>().clip = FailSong;
+        GetComponent<AudioSource>().Play();
         Player.GetComponent<PlayerController>().enabled = false;
         UIManager.instance.ShowGameOver();
     }

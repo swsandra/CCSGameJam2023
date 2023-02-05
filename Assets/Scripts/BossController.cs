@@ -19,6 +19,8 @@ public class BossController : MonoBehaviour
     AudioSource rootRising;
     [SerializeField]
     AudioClip show;
+    [SerializeField]
+    AudioSource lastTentacle;
     [Space]
     [Header("Damage")]
     public int maxHealth = 15;
@@ -32,6 +34,9 @@ public class BossController : MonoBehaviour
     Material flashMaterial;
     Material originalMaterial;
     int healthPerPhase = 15;
+    [Header("DamagePhase")]
+    [SerializeField] Transform[] tentacleBarrier;
+    [SerializeField] Transform pusher;
     [Space]
     [Header("Attack Parameters")]
     [SerializeField]
@@ -167,9 +172,9 @@ public class BossController : MonoBehaviour
         if (attacksCount < attacksBeforeTentacles){
             Debug.Log("Selecting random attack");
             float rand = Random.Range(0f, 1f);
-            if (rand <= .33f){
+            if (rand <= .33f && phase != 1){
                 ExpanseAttack();
-            }else if (rand <= .66f){
+            }else if ((rand <= .66f && phase != 1) || (rand <= .5f && phase == 1)){
                 SideTentaclesAttack();
             }else {
                 DolphinAttack();
@@ -297,6 +302,7 @@ public class BossController : MonoBehaviour
     IEnumerator LastTentacleCoroutine() {
         Time.timeScale = 0.5f;
         FindObjectOfType<CameraScript>().ZoomIn();
+        lastTentacle.Play();
         yield return new WaitForSeconds(1);
         Time.timeScale = 1;
         FindObjectOfType<CameraScript>().ZoomOut();
@@ -316,6 +322,7 @@ public class BossController : MonoBehaviour
 
     [ContextMenu("DolphinAttack")]
     void DolphinAttack(){
+        DivideRegions();
         float currentLeft = leftLimit;
         float partition_size = (Mathf.Abs(leftLimit)+Mathf.Abs(rightLimit))/regions;
         float currentRight = currentLeft+partition_size;
@@ -494,6 +501,12 @@ public class BossController : MonoBehaviour
 
         if (canAttack && attackRoutine == null){
             attackRoutine = StartCoroutine(Attack());
+        }
+    }
+
+    private void OnEnable() {
+        foreach(Transform tent in tentacleBarrier) {
+            tent.gameObject.SetActive(true);
         }
     }
 }

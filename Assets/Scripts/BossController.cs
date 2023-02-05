@@ -413,6 +413,7 @@ public class BossController : MonoBehaviour
     void Death(){
         invulnerable = true;
         ShowDeadFace();
+        StopAllCoroutines();
     }
 
     private void Update() {

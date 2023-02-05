@@ -13,7 +13,11 @@ public class BossController : MonoBehaviour
     int phase;
     [Space]
     [Header("Damage")]
-    public int health = 15;
+    public int maxHealth = 15;
+    [SerializeField]
+    int health;
+    [SerializeField]
+    bool invulnerable;
     [SerializeField] float flashDuration = .09f;
     [SerializeField] Material flashMaterial;
     Material originalMaterial;
@@ -118,7 +122,9 @@ public class BossController : MonoBehaviour
 
     private void Start() {
         phase = 1;
-        healthPerPhase = health/3;
+        health = maxHealth;
+        healthPerPhase = maxHealth/3;
+        invulnerable = true;
         DivideRegions();
         faceSpriteRenderer = face.GetComponent<SpriteRenderer>();
         face.transform.position = faceFinalPosition.position + (Vector3.up * topBound);
@@ -301,6 +307,7 @@ public class BossController : MonoBehaviour
 
     [ContextMenu("ShowWeakFace")]
     void ShowWeakFace(){
+        invulnerable = false;
         faceSpriteRenderer.sprite = weakFaceSprite;
         face.transform.position = faceFinalPosition.position + (Vector3.up * topBound);
         StartCoroutine(MoveFaceCoroutine(face.transform.position, faceFinalPosition.position, moveDuration));
@@ -312,6 +319,7 @@ public class BossController : MonoBehaviour
     }
 
     IEnumerator HideWeakFaceCoroutine(){
+        invulnerable = true;
         faceSpriteRenderer.sprite = angryFaceSprite;
         yield return new WaitForSeconds(1);
         Vector3 finalPosition = faceFinalPosition.position + (Vector3.up * topBound);
@@ -370,10 +378,12 @@ public class BossController : MonoBehaviour
 
     [ContextMenu("TakeDamage")]
     public void Damage() {
+        if (invulnerable) return;
         health -= 1;
         if (health < 0) {
             return;
         }
+        health = Mathf.Clamp(health, 0, health);
         // healthBar.localScale = new Vector3((float)health / boss.tentaclesHealth, healthBar.localScale.y, healthBar.localScale.z);
         Debug.Log("Continue current phase "+phase);
         StartCoroutine(damageRoutine());
@@ -393,6 +403,7 @@ public class BossController : MonoBehaviour
     }
 
     void Death(){
+        invulnerable = true;
         ShowDeadFace();
     }
 

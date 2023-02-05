@@ -7,6 +7,7 @@ public class Root : MonoBehaviour
 {
     Animator anim;
     SpriteRenderer sr;
+    Collider2D col;
     public int health = 3;
     public float idleDuration = 4f;
     BossController boss;
@@ -23,12 +24,13 @@ public class Root : MonoBehaviour
     {
         anim = GetComponent<Animator>();
         sr = GetComponent<SpriteRenderer>();
+        col = GetComponent<Collider2D>();
         originalMaterial = sr.material;
         boss = GameObject.FindObjectOfType<BossController>();
     }
 
     public void Damage() {
-        health -= 1;
+        health = Mathf.Clamp(health-1, 0, boss.tentaclesHealth);
         healthBar.localScale = new Vector3((float)health / boss.tentaclesHealth, healthBar.localScale.y, healthBar.localScale.z);
         if (health == 0) {
             StopAllCoroutines();
@@ -43,6 +45,14 @@ public class Root : MonoBehaviour
         }
     }
 
+    public void DisableHealthBar() {
+        healthBar.parent.gameObject.SetActive(false);
+    }
+
+    public void EnableHealthBar() {
+        healthBar.parent.gameObject.SetActive(true);
+    }
+
     IEnumerator damageRoutine() {
         sr.material = flashMaterial;
         yield return new WaitForSeconds(flashDuration);
@@ -51,6 +61,7 @@ public class Root : MonoBehaviour
 
     IEnumerator DieRoutine() {
         boss.TentaclesDefeated += 1;
+        col.enabled = false;
         float t = 0f;
         while(t < 1) {
             sr.material.color = Color.Lerp(Color.white, Color.black, t);
@@ -71,6 +82,8 @@ public class Root : MonoBehaviour
     }
 
     private void OnEnable() {
+        if (col != null)
+            col.enabled = false;
         StartCoroutine(HideRoutine());
     }
 

@@ -1061,9 +1061,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy
       objectReference: {fileID: 0}
+    - target: {fileID: 5445028310631620889, guid: dd6b53977c9e2a8428192d67425bb156, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5445028310631620892, guid: dd6b53977c9e2a8428192d67425bb156, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5445028310631620892, guid: dd6b53977c9e2a8428192d67425bb156, type: 3}
       propertyPath: m_SpriteTilingProperty.pivot.x

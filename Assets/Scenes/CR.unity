@@ -399,7 +399,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!61 &518625386
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -762,6 +762,16 @@ MonoBehaviour:
   xOffset: 0
   maxDolphinsPerRegion: 4
   dolphinCooldown: 0.8
+  weakFaceSprite: {fileID: 0}
+  angryFaceSprite: {fileID: 0}
+  happyFaceSprite: {fileID: 0}
+  deadFaceSprite: {fileID: 0}
+  faceFinalPosition: {fileID: 0}
+  face: {fileID: 0}
+  moveDuration: 0
+  MidWater: {fileID: 0}
+  NoWater: {fileID: 0}
+  lakeDuration: 0
 --- !u!212 &1017228762
 SpriteRenderer:
   m_ObjectHideFlags: 0

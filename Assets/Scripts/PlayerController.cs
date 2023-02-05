@@ -38,8 +38,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] LayerMask enemyLayers;
     [SerializeField] float attackDelay = 1f;
     [SerializeField] float moveDelay = .5f;
+    bool attackBoss = false;
     bool canAttack = true;
-    float bossAttack = 0f;
 
 
     private void Awake() {
@@ -88,7 +88,7 @@ public class PlayerController : MonoBehaviour
 
         // AttackPoint move and rotate
         if (currentMovement.magnitude != 0 && canAttack) {
-            attackPoint.localPosition = new Vector3(spriteRenderer.flipX ? -1 : 1, bossAttack, 0).normalized * attackOffset;
+            attackPoint.localPosition = new Vector3(spriteRenderer.flipX ? -1 : 1, 0, 0).normalized * attackOffset;
         }
     }
 
@@ -114,14 +114,14 @@ public class PlayerController : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other) {
         Debug.Log("TriggerEnter");
         if (other.gameObject.tag == "BossTrigger") {
-            bossAttack = 1f;
+            attackBoss = true;
         }
     }
 
     private void OnTriggerExit2D(Collider2D other) {
         Debug.Log("TriggerExit");
         if (other.gameObject.tag == "BossTrigger") {
-            bossAttack = 0f;
+            attackBoss = false;
         }
     }
 
@@ -135,18 +135,21 @@ public class PlayerController : MonoBehaviour
             StartCoroutine(AttackCooldown());
 
             // Play Animation
-            anim.SetTrigger("Attack");
+            if (attackBoss) {
+                anim.SetTrigger("AttackUp");
+                Debug.Log("HIT: BOSS");
+                // FindObjectOfType<BossController>().TakeDamage();
+            }
+            else {
+                anim.SetTrigger("Attack");
+                // Detect enemies in range
+                Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
 
-            // Detect enemies in range
-            Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
-
-            // Damage
-            foreach(Collider2D enemy in hitEnemies) {
-                Debug.Log("HIT: " + enemy.name);
-                // if (enemy.name == "Boss")
-                //     enemy.gameObject.GetComponent<BossController>().Damage();
-                // else
+                // Damage
+                foreach(Collider2D enemy in hitEnemies) {
+                    Debug.Log("HIT: " + enemy.name);
                     enemy.gameObject.GetComponent<Root>().Damage();
+                }
             }
         }
     }

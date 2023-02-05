@@ -26,8 +26,20 @@ public class BossController : MonoBehaviour
     [Space]
     [Header("Side Tentacles Attack")]
     [SerializeField]
-    GameObject[] spawns;
-    [Header("Dolphin Root Attack")]
+    GameObject sideTentaclePrefab;
+    [SerializeField]    
+    Transform[] spawns;
+    [SerializeField]
+    float sideTentacleSpeed;
+    [SerializeField]
+    float movementTime;
+    [SerializeField]
+    float idleTime;
+    [Space]
+    [Header("Tentacles Attack")]
+    [SerializeField] int tentaclesDefeated;
+    [Space]
+    [Header("Dolphin Attack")]
     [SerializeField]
     GameObject dolphinSidePrefab;
     [SerializeField]
@@ -45,8 +57,28 @@ public class BossController : MonoBehaviour
     float leftLimit;
     float rightLimit;
 
+    public int TentaclesDefeated {
+        get { return tentaclesDefeated; }
+        set {
+            tentaclesDefeated = value;
+            if (tentaclesDefeated >= tentaclesNeeded) {
+                if (tentacleCoroutine != null) 
+                    StopCoroutine(tentacleCoroutine);
+                // StartCoroutine(HideTentacles)
+            }
+        }
+    }
+    [SerializeField] int tentaclesNeeded;
+    public int tentaclesHealth;
+    [SerializeField] int tentacleRounds;
+    [SerializeField] int tentacleSpawnDelay;
+    [SerializeField] Transform[] tentacles;
+    [SerializeField] Transform bottomLeft;
+    [SerializeField] Transform topRight;
+    Coroutine tentacleCoroutine;
+
+
     private void Start() {
-        DivideRegions();
     }
 
     [ContextMenu("ExpanseAttack")]
@@ -97,21 +129,53 @@ public class BossController : MonoBehaviour
     }
 
     [ContextMenu("SideTentaclesAttack")]
-    // IEnumerator SideTentaclesAttack() {
-    //     if (Random.Range(0,2) > 0) {
-    //         if (Random.Range(0,2) > 0) {
-    //             Instantiate
-    //         } else {
+    void SideTentaclesAttack() {
+        StartCoroutine(SideTentaclesCoroutine());
+    }
+    IEnumerator SideTentaclesCoroutine() {
+        bool up = Random.Range(0,2) > 0;
+        int firstSide = Random.Range(0,2);
+        int secondSide = Random.Range(0,2);
 
-    //         }
-    //     } else {
-    //         if (Random.Range(0,2) > 0) {
-                
-    //         } else {
+        int direction = firstSide == 0 ? 1 : -1;
+        GameObject first = Instantiate(sideTentaclePrefab,spawns[2 * (up ? 1 : 0) + firstSide].position, Quaternion.Euler(0,0, -direction * 90));
+        first.GetComponent<SideTentacle>().direction = direction;
+        first.GetComponent<SideTentacle>().speed = sideTentacleSpeed;
+        first.GetComponent<SideTentacle>().movementTime = movementTime;
+        first.GetComponent<SideTentacle>().idleTime = idleTime;
 
-    //         }
-    //     }
-    // }
+        yield return new WaitForSeconds(2);
+        direction = secondSide == 0 ? 1 : -1;
+        GameObject second = Instantiate(sideTentaclePrefab,spawns[2 * (!up ? 1 : 0) + secondSide].position, Quaternion.Euler(0,0,-direction * 90));
+        second.GetComponent<SideTentacle>().direction = direction;
+        second.GetComponent<SideTentacle>().speed = sideTentacleSpeed;
+        second.GetComponent<SideTentacle>().movementTime = movementTime;
+        second.GetComponent<SideTentacle>().idleTime = idleTime;
+    }
+
+    [ContextMenu("TentaclesAttack")]
+    void TentaclesAttack() {
+        tentacleCoroutine = StartCoroutine(TentaclesAttackCoroutine());
+    }
+
+    IEnumerator TentaclesAttackCoroutine() {
+        float tentDuration = tentacles[0].GetComponent<Root>().idleDuration;
+
+        for(int i = 0; i < tentacleRounds; i++) {
+            for (int j = 0; j < tentacles.Length; j++) {
+                Transform tent = tentacles[j];
+                tent.position = new Vector3(Random.Range(bottomLeft.position.x, topRight.position.x), Random.Range(bottomLeft.position.y, topRight.position.y), 0);
+                tent.gameObject.SetActive(true);
+            }
+            yield return new WaitForSeconds(tentDuration + tentacleSpawnDelay);
+        }
+
+        // If not killed, set health back to full
+        foreach(Transform tent in tentacles) {
+            tent.GetComponent<Root>().health = tentaclesHealth;
+        }
+        TentaclesDefeated = 0;
+    }
 
     void DivideRegions(){
         Camera cam = Camera.main;

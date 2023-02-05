@@ -18,6 +18,12 @@ public class PlayerController : MonoBehaviour
     bool invulnerable = false;
     [SerializeField] float invulnerableDuration = 1f;
 
+    [Header("Damage")]
+    [SerializeField] float flashDuration = .09f;
+    [SerializeField] Sprite hitSprite;
+    [SerializeField] Material flashMaterial;
+    Material originalMaterial;
+
     [Header("Movement")]
     [SerializeField] float speed = 1f;
     Vector2 currentMovement;
@@ -31,6 +37,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float attackDelay = 1f;
     [SerializeField] float moveDelay = .5f;
     bool canAttack = true;
+    float bossAttack = 0f;
 
 
     private void Awake() {
@@ -47,6 +54,7 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        originalMaterial = spriteRenderer.material;
     }
 
     // Update is called once per frame
@@ -73,7 +81,7 @@ public class PlayerController : MonoBehaviour
 
         // AttackPoint move and rotate
         if (currentMovement.magnitude != 0 && canAttack) {
-            attackPoint.localPosition = currentMovement.normalized * attackOffset;
+            attackPoint.localPosition = new Vector3(spriteRenderer.flipX ? -1 : 1, bossAttack, 0).normalized * attackOffset;
         }
     }
 
@@ -88,10 +96,24 @@ public class PlayerController : MonoBehaviour
                 return;
                 //TODO: TRIGGER GAME OVER
             }
-            // TODO: TRIGGER ANIMATION/EFFECT
             invulnerable = true;
             StartCoroutine(InvulnerableCooldown());
+            StartCoroutine(flashRoutine());
             StartCoroutine(DamageAnimationCooldown());
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other) {
+        Debug.Log("TriggerEnter");
+        if (other.gameObject.tag == "BossTrigger") {
+            bossAttack = 1f;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other) {
+        Debug.Log("TriggerExit");
+        if (other.gameObject.tag == "BossTrigger") {
+            bossAttack = 0f;
         }
     }
 
@@ -113,8 +135,10 @@ public class PlayerController : MonoBehaviour
             // Damage
             foreach(Collider2D enemy in hitEnemies) {
                 Debug.Log("HIT: " + enemy.name);
-                enemy.gameObject.GetComponent<Root>().Damage();
-                // TODO: Fix for tree
+                // if (enemy.name == "Boss")
+                //     enemy.gameObject.GetComponent<BossController>().Damage();
+                // else
+                    enemy.gameObject.GetComponent<Root>().Damage();
             }
         }
     }
@@ -125,10 +149,21 @@ public class PlayerController : MonoBehaviour
         Gizmos.DrawWireSphere(attackPoint.position, attackRange);
     }
 
+    IEnumerator flashRoutine() {
+        spriteRenderer.color = Color.red;
+        spriteRenderer.material = flashMaterial;
+        yield return new WaitForSeconds(flashDuration);
+        spriteRenderer.color = Color.white;
+        spriteRenderer.material = originalMaterial;
+    }
+
     IEnumerator DamageAnimationCooldown() {
+        anim.enabled = false;
+        spriteRenderer.sprite = hitSprite;
         yield return new WaitForSeconds(moveDelay);
         canMove = true;
         canAttack = true;
+        anim.enabled = true;
     }
 
     IEnumerator InvulnerableCooldown() {

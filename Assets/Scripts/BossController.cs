@@ -406,14 +406,14 @@ public class BossController : MonoBehaviour
     }
 
     [ContextMenu("ShowHappyFace")]
-    void ShowHappyFace(){
+    public void ShowHappyFace(){
         faceSpriteRenderer.sprite = happyFaceSprite;
-        // face.transform.position = faceFinalPosition.position + (Vector3.up * topBound);
-        // StartCoroutine(MoveFaceCoroutine(face.transform.position, faceFinalPosition.position, moveDuration));
+        face.transform.position = faceFinalPosition.position + (Vector3.up * topBound);
+        StartCoroutine(MoveFaceCoroutine(face.transform.position, faceFinalPosition.position, moveDuration));
     }
 
     [ContextMenu("ShowDeadFace")]
-    void ShowDeadFace(){
+    public void ShowDeadFace(){
         faceSpriteRenderer.sprite = deadFaceSprite;
         // face.transform.position = faceFinalPosition.position + (Vector3.up * topBound);
         // StartCoroutine(MoveFaceCoroutine(face.transform.position, faceFinalPosition.position, moveDuration));
@@ -468,6 +468,7 @@ public class BossController : MonoBehaviour
         StartCoroutine(damageRoutine());
         if (health == 0) {
             Death();
+            GameManager.instance.Win();
         }else if (health <= healthPerPhase && phase == 2){ // Third phase
             ThirdPhase();
         }else if (health <= healthPerPhase*2 && phase == 1){ // Second phase

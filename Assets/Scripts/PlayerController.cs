@@ -125,7 +125,7 @@ public class PlayerController : MonoBehaviour
                 GetComponent<Collider2D>().enabled = false;
                 spriteRenderer.sprite = hitSprite;
                 return;
-                //TODO: TRIGGER GAME OVER
+                GameManager.instance.GameOver();
             } else {
                 AudioSource.PlayClipAtPoint(damage, new Vector3(0,0,-10));
             }

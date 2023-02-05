@@ -17,6 +17,8 @@ public class BossController : MonoBehaviour
     AudioSource earthquakeSource;
     [SerializeField]
     AudioSource rootRising;
+    [SerializeField]
+    AudioClip show;
     [Space]
     [Header("Damage")]
     public int maxHealth = 15;
@@ -314,6 +316,7 @@ public class BossController : MonoBehaviour
             dolphin = createDolphin(position, null);
             // Change order in layer
             dolphin.GetComponent<SortingGroup>().sortingOrder = i < regions/2 ? i : regions-i;
+            rootRising.Play();
             StartCoroutine(DolphinOut(0, dolphin));
             currentLeft = currentRight;
             currentRight = currentLeft+partition_size;
@@ -321,6 +324,7 @@ public class BossController : MonoBehaviour
     }
 
     Transform createDolphin(Vector3 position, Transform parent){
+        AudioSource.PlayClipAtPoint(show, position);
         GameObject dolphinPrefab = Mathf.Abs(position.x) > maxFrontXPosition ? dolphinSidePrefab : dolphinFrontPrefab;
         Transform child = Instantiate(dolphinPrefab, position, Quaternion.identity, parent).transform;
         if (parent != null){
@@ -334,7 +338,9 @@ public class BossController : MonoBehaviour
 
     IEnumerator DolphinOut(int recursion, Transform parent) {
         if (recursion >= maxDolphinsPerRegion) {
+            rootRising.Stop();
             yield return new WaitForSeconds(2);
+            rootRising.Play();
             StartCoroutine(DolphinBack(parent));
             yield break;
         }
@@ -354,6 +360,7 @@ public class BossController : MonoBehaviour
 
         Transform parent = branch.parent;
         if (!parent){
+            rootRising.Stop();
             canAttack = true;
             yield break;
         }
@@ -476,7 +483,7 @@ public class BossController : MonoBehaviour
         }
 
         if (canAttack && attackRoutine == null){
-            attackRoutine = StartCoroutine(Attack());
+            // attackRoutine = StartCoroutine(Attack());
         }
     }
 }

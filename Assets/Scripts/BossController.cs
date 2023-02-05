@@ -10,12 +10,13 @@ public class BossController : MonoBehaviour
     GameObject rootPrefab;
     SpriteRenderer sr;
     [SerializeField]
-    bool finalPhase;
     int phase;
     [Space]
     [Header("Sounds")]
     [SerializeField]
     AudioSource earthquakeSource;
+    [SerializeField]
+    AudioSource rootRising;
     [Space]
     [Header("Damage")]
     public int health = 15;
@@ -132,6 +133,7 @@ public class BossController : MonoBehaviour
 
     [ContextMenu("ExpanseAttack")]
     void ExpanseAttack() {
+        rootRising.Play();
         Transform baseRoot1 = Instantiate(rootPrefab, pivot.transform.position, Quaternion.Euler(0,0,180 - Random.Range(20, 45)), pivot).transform;
         StartCoroutine(Expand(0, baseRoot1));
         Transform baseRoot2 = Instantiate(rootPrefab, pivot.transform.position, Quaternion.Euler(0,0,180 + Random.Range(20, 45)), pivot).transform;
@@ -140,11 +142,16 @@ public class BossController : MonoBehaviour
 
     IEnumerator Expand(int recursion, Transform father) {
         if (recursion == maxDivides) {
-            yield return new WaitForSeconds(2);
+            yield return new WaitForSeconds(0.3f);
+            rootRising.Stop();
+            yield return new WaitForSeconds(1.7f);
             if(phase == 3){
                 rotate = true;
+                rootRising.Play();
                 yield return new WaitForSeconds(rotationDuration);
+                rootRising.Stop();
             }
+            rootRising.Play();
             StartCoroutine(Contract(father));
             yield break;
         }
@@ -169,6 +176,7 @@ public class BossController : MonoBehaviour
         yield return new WaitForSeconds(divideCooldown);
         Destroy(branch.gameObject);
         if (parent.name == "ExpansionPivot") {
+            rootRising.Stop();
             rotate = false;
             pivot.Rotate(Vector3.zero);
             yield break;

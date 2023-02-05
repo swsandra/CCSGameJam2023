@@ -32,6 +32,9 @@ public class BossController : MonoBehaviour
     Material flashMaterial;
     Material originalMaterial;
     int healthPerPhase = 15;
+    [Header("DamagePhase")]
+    [SerializeField] Transform[] tentacleBarrier;
+    [SerializeField] Transform pusher;
     [Space]
     [Header("Attack Parameters")]
     [SerializeField]
@@ -494,6 +497,12 @@ public class BossController : MonoBehaviour
 
         if (canAttack && attackRoutine == null){
             attackRoutine = StartCoroutine(Attack());
+        }
+    }
+
+    private void OnEnable() {
+        foreach(Transform tent in tentacleBarrier) {
+            tent.gameObject.SetActive(true);
         }
     }
 }

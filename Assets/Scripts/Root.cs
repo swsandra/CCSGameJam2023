@@ -12,7 +12,7 @@ public class Root : MonoBehaviour
     public float idleDuration = 4f;
     BossController boss;
     [SerializeField] float deathDuration;
-    [SerializeField] RectTransform healthBar;
+    public RectTransform healthBar;
     [Header("Sounds")]
     [SerializeField] AudioClip damage;
     [SerializeField] AudioClip show;

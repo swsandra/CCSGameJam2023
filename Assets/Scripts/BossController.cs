@@ -301,6 +301,7 @@ public class BossController : MonoBehaviour
         // If not killed, set health back to full
         foreach(Transform tent in tentacles) {
             tent.GetComponent<Root>().health = tentaclesHealth;
+            tent.GetComponent<Root>().healthBar.localScale = new Vector3(1,1,1);
         }
         TentaclesDefeated = 0;
         FindObjectOfType<CameraScript>().StopRumbling();

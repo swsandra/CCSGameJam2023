@@ -4512,7 +4512,7 @@ MonoBehaviour:
   damagePhaseDuration: 6
   canAttack: 0
   attackCooldown: 3
-  attacksBeforeTentacles: 0
+  attacksBeforeTentacles: 3
   maxDivides: 5
   divideCooldown: 0.5
   pivot: {fileID: 1744065981}
@@ -4528,7 +4528,7 @@ MonoBehaviour:
   movementTime: 1.5
   idleTime: 3
   tentaclesDefeated: 0
-  tentaclesNeeded: 1
+  tentaclesNeeded: 3
   tentaclesHealth: 3
   tentacleRounds: 3
   tentacleSpawnDelay: 2

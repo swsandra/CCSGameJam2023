@@ -247,7 +247,7 @@ public class BossController : MonoBehaviour
             } else if (angle < -25) {
                 rotationDirection = 1;
             }
-            pivot.Rotate(new Vector3(0,0,rotationSpeed * rotationDirection));
+            pivot.Rotate(new Vector3(0,0,rotationSpeed * rotationDirection * Time.deltaTime));
         }
     }
 }

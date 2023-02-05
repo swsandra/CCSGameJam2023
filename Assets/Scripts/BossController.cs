@@ -23,6 +23,7 @@ public class BossController : MonoBehaviour
     AudioSource lastTentacle;
     [Space]
     [Header("Damage")]
+    [SerializeField] RectTransform healthBar;
     public int maxHealth = 15;
     [SerializeField]
     int health;
@@ -503,6 +504,7 @@ public class BossController : MonoBehaviour
     public void Damage() {
         if (invulnerable) return;
         health -= 1;
+        healthBar.localScale = new Vector3((float)health / maxHealth, healthBar.localScale.y, healthBar.localScale.z);
         if (health < 0) {
             return;
         }

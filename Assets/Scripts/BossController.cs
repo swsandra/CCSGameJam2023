@@ -78,10 +78,29 @@ public class BossController : MonoBehaviour
     float dolphinCooldown = 0.8f;
     float leftLimit;
     float rightLimit;
+    [Space]
+    [Header("Faces")]
+    [SerializeField]
+    Sprite weakFaceSprite;
+    [SerializeField]
+    Sprite angryFaceSprite;
+    [SerializeField]
+    Sprite happyFaceSprite;
+    [SerializeField]
+    Sprite deadFaceSprite;
+    [SerializeField]
+    Transform faceFinalPosition;
+    [SerializeField]
+    GameObject face;
+    [SerializeField]
+    float moveDuration;
+    float topBound;
+    SpriteRenderer faceSpriteRenderer;
 
 
     private void Start() {
         DivideRegions();
+        faceSpriteRenderer = face.GetComponent<SpriteRenderer>();
     }
 
     [ContextMenu("ExpanseAttack")]
@@ -183,9 +202,11 @@ public class BossController : MonoBehaviour
     void DivideRegions(){
         Camera cam = Camera.main;
         float camXOffset = cam.transform.position.x;
+        float camYOffset = cam.transform.position.y;
         Vector3 screenBounds = cam.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, cam.transform.position.z));
         rightLimit = screenBounds.x + xOffset;
         leftLimit = (screenBounds.x*-1)+(camXOffset*2) - xOffset;
+        topBound = transform.GetComponent<SpriteRenderer>().bounds.size.y/2;
     }
 
     [ContextMenu("DolphinAttack")]
@@ -243,6 +264,51 @@ public class BossController : MonoBehaviour
             yield break;
         }
         StartCoroutine(DolphinBack(parent));
+    }
+
+    [ContextMenu("ShowWeakFace")]
+    void ShowWeakFace(){
+        faceSpriteRenderer.sprite = weakFaceSprite;
+        face.transform.position = faceFinalPosition.position + (Vector3.up * topBound);
+        StartCoroutine(MoveFaceCoroutine(face.transform.position, faceFinalPosition.position, moveDuration));
+    }
+
+    [ContextMenu("HideWeakFace")]
+    void HideWeakFace(){
+        StartCoroutine(HideWeakFaceCoroutine());
+    }
+
+    IEnumerator HideWeakFaceCoroutine(){
+        faceSpriteRenderer.sprite = angryFaceSprite;
+        yield return new WaitForSeconds(1);
+        Vector3 finalPosition = faceFinalPosition.position + (Vector3.up * topBound);
+        StartCoroutine(MoveFaceCoroutine(face.transform.position, finalPosition, moveDuration));
+    }
+
+    [ContextMenu("ShowHappyFace")]
+    void ShowHappyFace(){
+        faceSpriteRenderer.sprite = happyFaceSprite;
+        face.transform.position = faceFinalPosition.position + (Vector3.up * topBound);
+        StartCoroutine(MoveFaceCoroutine(face.transform.position, faceFinalPosition.position, moveDuration));
+    }
+
+    [ContextMenu("ShowDeadFace")]
+    void ShowDeadFace(){
+        faceSpriteRenderer.sprite = deadFaceSprite;
+        face.transform.position = faceFinalPosition.position + (Vector3.up * topBound);
+        StartCoroutine(MoveFaceCoroutine(face.transform.position, faceFinalPosition.position, moveDuration));
+    }
+
+    IEnumerator MoveFaceCoroutine(Vector3 startPos, Vector3 endPos, float duration) {
+        Vector3 currentPos = startPos;
+        float t = 0f;
+        while(t < duration) {
+            face.transform.position = Vector3.Lerp(currentPos, endPos, t/duration);
+            t += Time.deltaTime;
+            yield return null;
+        }
+        face.transform.position = endPos;
+        yield return null;
     }
 
     private void Update() {

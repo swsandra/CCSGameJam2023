@@ -14,11 +14,19 @@ public class PlayerController : MonoBehaviour
     PlayerInput input;
     SpriteRenderer spriteRenderer;
     CinemachineImpulseSource impulse;
-
+    [Header("Sounds")]
+    [SerializeField]
+    AudioSource walkingSource;
+    [SerializeField]
+    AudioClip swing;
+    [SerializeField]
+    AudioClip damage;
+    [SerializeField]
+    AudioClip dead;
     [Header("Health")]
+    [SerializeField] float invulnerableDuration = 1f;
     int health = 3;
     bool invulnerable = false;
-    [SerializeField] float invulnerableDuration = 1f;
 
     [Header("Damage")]
     [SerializeField] float flashDuration = .09f;
@@ -91,6 +99,12 @@ public class PlayerController : MonoBehaviour
         if (currentMovement.magnitude != 0 && canAttack) {
             attackPoint.localPosition = new Vector3(spriteRenderer.flipX ? -attackOffsetX : attackOffsetX, attackOffsetY, 0);
         }
+
+        if (currentMovement.magnitude > 0 && !walkingSource.isPlaying) {
+            walkingSource.Play();
+        } else if (currentMovement.magnitude == 0) {
+            walkingSource.Stop();
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D other) {
@@ -103,11 +117,14 @@ public class PlayerController : MonoBehaviour
             currentMovement = Vector2.zero;
             if (health <= 0) {
                 StartCoroutine(flashRoutine());
+                AudioSource.PlayClipAtPoint(dead, new Vector3(0,0, -10));
                 anim.enabled = false;
                 GetComponent<Collider2D>().enabled = false;
                 spriteRenderer.sprite = hitSprite;
                 return;
                 //TODO: TRIGGER GAME OVER
+            } else {
+                AudioSource.PlayClipAtPoint(damage, new Vector3(0,0,-10));
             }
             invulnerable = true;
             StartCoroutine(InvulnerableCooldown());
@@ -150,6 +167,9 @@ public class PlayerController : MonoBehaviour
                 // Detect enemies in range
                 Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
 
+                if (hitEnemies.Length == 0) { 
+                    AudioSource.PlayClipAtPoint(swing, transform.position);
+                }
                 // Damage
                 foreach(Collider2D enemy in hitEnemies) {
                     Debug.Log("HIT: " + enemy.name);

@@ -10,12 +10,13 @@ public class BossController : MonoBehaviour
     GameObject rootPrefab;
     SpriteRenderer sr;
     [SerializeField]
-    bool finalPhase;
     int phase;
     [Space]
     [Header("Sounds")]
     [SerializeField]
     AudioSource earthquakeSource;
+    [SerializeField]
+    AudioSource rootRising;
     [Space]
     [Header("Damage")]
     public int maxHealth = 15;
@@ -23,10 +24,25 @@ public class BossController : MonoBehaviour
     int health;
     [SerializeField]
     bool invulnerable;
-    [SerializeField] float flashDuration = .09f;
-    [SerializeField] Material flashMaterial;
+    [SerializeField]
+    float flashDuration = .09f;
+    [SerializeField]
+    Material flashMaterial;
     Material originalMaterial;
     int healthPerPhase = 15;
+    [Space]
+    [Header("Attack Parameters")]
+    [SerializeField]
+    bool canAttack;
+    public bool CanAttack {
+        get { return canAttack; }
+        set {
+            canAttack = value;
+        }
+    }
+    [SerializeField]
+    float attackCooldown;
+    Coroutine attackRoutine;
     [Header("Root Expansion Attack")]
     [Header("Division")]
     [SerializeField]
@@ -134,10 +150,32 @@ public class BossController : MonoBehaviour
         face.transform.position = faceFinalPosition.position + (Vector3.up * topBound);
         sr = GetComponent<SpriteRenderer>();
         originalMaterial = sr.material;
+        canAttack = true;
+        attackRoutine = null;
+    }
+
+    IEnumerator Attack(){
+        yield return new WaitForSeconds(attackCooldown);
+        Debug.Log("Attack cooldown finished");
+
+        Debug.Log("Selecting attack");
+        float rand = Random.Range(0f, 1f);
+        if (rand <= .25f){
+            ExpanseAttack();
+        }else if (rand <= .5f){
+            SideTentaclesAttack();
+        }else if (rand <= .75f){
+            TentaclesAttack();
+        }else {
+            DolphinAttack();
+        }
+        CanAttack = false;
+        attackRoutine = null;
     }
 
     [ContextMenu("ExpanseAttack")]
     void ExpanseAttack() {
+        rootRising.Play();
         Transform baseRoot1 = Instantiate(rootPrefab, pivot.transform.position, Quaternion.Euler(0,0,180 - Random.Range(20, 45)), pivot).transform;
         StartCoroutine(Expand(0, baseRoot1));
         Transform baseRoot2 = Instantiate(rootPrefab, pivot.transform.position, Quaternion.Euler(0,0,180 + Random.Range(20, 45)), pivot).transform;
@@ -146,11 +184,16 @@ public class BossController : MonoBehaviour
 
     IEnumerator Expand(int recursion, Transform father) {
         if (recursion == maxDivides) {
-            yield return new WaitForSeconds(2);
+            yield return new WaitForSeconds(0.3f);
+            rootRising.Stop();
+            yield return new WaitForSeconds(1.7f);
             if(phase == 3){
                 rotate = true;
+                rootRising.Play();
                 yield return new WaitForSeconds(rotationDuration);
+                rootRising.Stop();
             }
+            rootRising.Play();
             StartCoroutine(Contract(father));
             yield break;
         }
@@ -175,8 +218,10 @@ public class BossController : MonoBehaviour
         yield return new WaitForSeconds(divideCooldown);
         Destroy(branch.gameObject);
         if (parent.name == "ExpansionPivot") {
+            rootRising.Stop();
             rotate = false;
             pivot.Rotate(Vector3.zero);
+            canAttack = true;
             yield break;
         } else {
            StartCoroutine(Contract(parent));
@@ -234,6 +279,7 @@ public class BossController : MonoBehaviour
         TentaclesDefeated = 0;
         FindObjectOfType<CameraScript>().StopRumbling();
         earthquakeSource.Stop();
+        canAttack = true;
     }
 
     IEnumerator LastTentacleCoroutine() {
@@ -308,6 +354,7 @@ public class BossController : MonoBehaviour
 
         Transform parent = branch.parent;
         if (!parent){
+            canAttack = true;
             yield break;
         }
         StartCoroutine(DolphinBack(parent));
@@ -413,6 +460,7 @@ public class BossController : MonoBehaviour
     void Death(){
         invulnerable = true;
         ShowDeadFace();
+        StopAllCoroutines();
     }
 
     private void Update() {
@@ -425,6 +473,10 @@ public class BossController : MonoBehaviour
                 rotationDirection = 1;
             }
             pivot.Rotate(new Vector3(0,0,rotationSpeed * rotationDirection * Time.deltaTime));
+        }
+
+        if (canAttack && attackRoutine == null){
+            attackRoutine = StartCoroutine(Attack());
         }
     }
 }

@@ -102,6 +102,7 @@ public class BossController : MonoBehaviour
                     canAttack = false;
                 }
                 StartCoroutine(EnterDamagePhase());
+                tentaclesDefeated = 0;
             }
         }
     }
@@ -486,7 +487,7 @@ public class BossController : MonoBehaviour
         phase = 3;
         attacksBeforeTentacles += 1;
         attackCooldown -= 1;
-        regions += 2;
+        // regions += 2;
         StartCoroutine(HideWeakFaceCoroutine());
         ShowNoWater();
     }

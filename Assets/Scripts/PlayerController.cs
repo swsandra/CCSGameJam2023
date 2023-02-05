@@ -25,7 +25,8 @@ public class PlayerController : MonoBehaviour
     AudioClip dead;
     [Header("Health")]
     [SerializeField] float invulnerableDuration = 1f;
-    int health = 3;
+    public int health = 3;
+    public int maxHealth = 3;
     bool invulnerable = false;
 
     [Header("Damage")]
@@ -57,6 +58,7 @@ public class PlayerController : MonoBehaviour
         // input.Player.Move.performed += Movement;
 
         input.Player.Fire.performed += Attack;
+        health = maxHealth;
     }
 
     // Start is called before the first frame update
@@ -115,14 +117,15 @@ public class PlayerController : MonoBehaviour
             canMove = false;
             canAttack = false;
             currentMovement = Vector2.zero;
+            UIManager.instance.UpdateLives();
             if (health <= 0) {
                 StartCoroutine(flashRoutine());
                 AudioSource.PlayClipAtPoint(dead, new Vector3(0,0, -10));
                 anim.enabled = false;
                 GetComponent<Collider2D>().enabled = false;
                 spriteRenderer.sprite = hitSprite;
+                GameManager.instance.GameOver();
                 return;
-                //TODO: TRIGGER GAME OVER
             } else {
                 AudioSource.PlayClipAtPoint(damage, new Vector3(0,0,-10));
             }

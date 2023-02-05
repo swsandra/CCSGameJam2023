@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(AudioSource))]
 public class GameManager : MonoBehaviour
 {
+    public static GameManager instance;
     [SerializeField]
     AudioClip MenuSong;
     [SerializeField]
@@ -15,8 +17,12 @@ public class GameManager : MonoBehaviour
     GameObject Boss;
     [SerializeField]
     GameObject Player;
-    [SerializeField]
-    GameObject UI;
+
+    private void Awake() {
+        if (instance == null) {
+            instance = this;
+        }
+    }
 
     private void Start() {
         GetComponent<AudioSource>().clip = MenuSong;
@@ -29,7 +35,27 @@ public class GameManager : MonoBehaviour
         StartCoroutine(PlayGameSong());
         Player.GetComponent<PlayerController>().enabled = true;
         Boss.GetComponent<BossController>().enabled = true;
-        UI.SetActive(false);
+        UIManager.instance.HideTitle();
+    }
+
+    public void Win()
+    {
+        Player.GetComponent<PlayerController>().enabled = false;
+        Boss.GetComponent<BossController>().GameEnds();
+        UIManager.instance.ShowWin();
+    }
+
+    public void GameOver()
+    {
+        Boss.GetComponent<BossController>().ShowHappyFace();
+        Boss.GetComponent<BossController>().GameEnds();
+        Player.GetComponent<PlayerController>().enabled = false;
+        UIManager.instance.ShowGameOver();
+    }
+
+    public void PlayAgain()
+    {
+        SceneManager.LoadScene("Game");
     }
  
     IEnumerator PlayGameSong()

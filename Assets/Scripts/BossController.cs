@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class BossController : MonoBehaviour
 {
@@ -69,6 +70,8 @@ public class BossController : MonoBehaviour
     float yStartPosition;
     [SerializeField]
     float maxFrontXPosition;
+    [SerializeField]
+    float xOffset;
     [SerializeField]
     int maxDolphinsPerRegion = 4;
     [SerializeField]
@@ -181,9 +184,8 @@ public class BossController : MonoBehaviour
         Camera cam = Camera.main;
         float camXOffset = cam.transform.position.x;
         Vector3 screenBounds = cam.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, cam.transform.position.z));
-        // TODO: fix agregar un offset a los lados
-        rightLimit = screenBounds.x;
-        leftLimit = (screenBounds.x*-1)+(camXOffset*2);
+        rightLimit = screenBounds.x + xOffset;
+        leftLimit = (screenBounds.x*-1)+(camXOffset*2) - xOffset;
     }
 
     [ContextMenu("DolphinAttack")]
@@ -196,6 +198,8 @@ public class BossController : MonoBehaviour
         for (int i=0; i<regions; i++){
             position = new Vector3(Random.Range(currentLeft, currentRight), yStartPosition, 0f);
             dolphin = createDolphin(position, null);
+            // Change order in layer
+            dolphin.GetComponent<SortingGroup>().sortingOrder = i < regions/2 ? i : regions-i;
             StartCoroutine(DolphinOut(0, dolphin));
             currentLeft = currentRight;
             currentRight = currentLeft+partition_size;
@@ -205,6 +209,9 @@ public class BossController : MonoBehaviour
     Transform createDolphin(Vector3 position, Transform parent){
         GameObject dolphinPrefab = Mathf.Abs(position.x) > maxFrontXPosition ? dolphinSidePrefab : dolphinFrontPrefab;
         Transform child = Instantiate(dolphinPrefab, position, Quaternion.identity, parent).transform;
+        if (parent != null){
+            child.GetComponent<SortingGroup>().sortingOrder = parent.GetComponent<SortingGroup>().sortingOrder;
+        }
         if (position.x > 0){
             child.GetComponent<SpriteRenderer>().flipX = true;
         }
@@ -219,7 +226,7 @@ public class BossController : MonoBehaviour
         }
         yield return new WaitForSeconds(dolphinCooldown);
         Vector3 position = parent.transform.position;
-        float distance = parent.GetComponent<SpriteRenderer>().bounds.size.x;
+        float distance = parent.GetComponent<SpriteRenderer>().bounds.size.x/1.5f;
         Vector3 director = parent.position.x >= 0 ? new Vector3(1,-1,0) : new Vector3(-1,-1,0);
         position += Quaternion.Euler(0, 45, 0) * director * distance;
         Transform child = createDolphin(position, parent);

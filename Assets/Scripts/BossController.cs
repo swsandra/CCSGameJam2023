@@ -418,6 +418,7 @@ public class BossController : MonoBehaviour
         foreach(Transform tent in tentacleBarrier) {
             tent.gameObject.SetActive(true);
         }
+        yield return new WaitForSeconds(2);
         pusher.localPosition = Vector3.zero;
     }
 

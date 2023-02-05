@@ -809,7 +809,7 @@ GameObject:
   - component: {fileID: 262726197}
   m_Layer: 0
   m_Name: Barrier (5)
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1109,7 +1109,7 @@ GameObject:
   - component: {fileID: 363450482}
   m_Layer: 0
   m_Name: Barrier (3)
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1501,7 +1501,7 @@ GameObject:
   - component: {fileID: 531496254}
   m_Layer: 0
   m_Name: Barrier (4)
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1906,7 +1906,7 @@ GameObject:
   - component: {fileID: 641766437}
   m_Layer: 0
   m_Name: Barrier (2)
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3244,6 +3244,9 @@ MonoBehaviour:
   - {fileID: 531496250}
   - {fileID: 262726193}
   pusher: {fileID: 1173661286}
+  pusherFinalPosition: {x: 0, y: -2, z: 0}
+  pusherDuration: 1
+  damagePhaseDuration: 6
   canAttack: 0
   attackCooldown: 3
   attacksBeforeTentacles: 3
@@ -4563,9 +4566,9 @@ MonoBehaviour:
   flashMaterial: {fileID: 2100000, guid: 2934dc2d0502cc24f8fff36c8d0b396e, type: 2}
   speed: 3
   attackPoint: {fileID: 1061286276}
-  attackOffsetX: 1
-  attackOffsetY: 1
-  attackRange: 1
+  attackOffsetX: 4
+  attackOffsetY: 3
+  attackRange: 0.5
   enemyLayers:
     serializedVersion: 2
     m_Bits: 64
@@ -5455,7 +5458,7 @@ GameObject:
   - component: {fileID: 1857113023}
   m_Layer: 0
   m_Name: Barrier (1)
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

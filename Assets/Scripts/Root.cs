@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Root : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class Root : MonoBehaviour
     public float idleDuration = 4f;
     BossController boss;
     [SerializeField] float deathDuration;
+    [SerializeField] RectTransform healthBar;
 
     [Header("Damage")]
     [SerializeField] float flashDuration = .09f;
@@ -27,6 +29,7 @@ public class Root : MonoBehaviour
 
     public void Damage() {
         health -= 1;
+        healthBar.localScale = new Vector3((float)health / boss.tentaclesHealth, healthBar.localScale.y, healthBar.localScale.z);
         if (health == 0) {
             StopAllCoroutines();
             GetComponent<Animator>().enabled = false;
@@ -74,6 +77,7 @@ public class Root : MonoBehaviour
     private void OnDisable() {
         if (health <= 0) {
             health = boss.tentaclesHealth;
+            healthBar.localScale = new Vector3(1, healthBar.localScale.y, healthBar.localScale.z);
         }
         sr.material.color = Color.white;
         sr.material = originalMaterial;

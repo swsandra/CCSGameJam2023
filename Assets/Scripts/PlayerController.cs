@@ -14,11 +14,13 @@ public class PlayerController : MonoBehaviour
     PlayerInput input;
     SpriteRenderer spriteRenderer;
     CinemachineImpulseSource impulse;
-
+    [Header("Sounds")]
+    [SerializeField]
+    AudioSource walkingSource;
     [Header("Health")]
+    [SerializeField] float invulnerableDuration = 1f;
     int health = 3;
     bool invulnerable = false;
-    [SerializeField] float invulnerableDuration = 1f;
 
     [Header("Damage")]
     [SerializeField] float flashDuration = .09f;
@@ -90,6 +92,12 @@ public class PlayerController : MonoBehaviour
         // AttackPoint move and rotate
         if (currentMovement.magnitude != 0 && canAttack) {
             attackPoint.localPosition = new Vector3(spriteRenderer.flipX ? -attackOffsetX : attackOffsetX, attackOffsetY, 0);
+        }
+
+        if (currentMovement.magnitude > 0 && !walkingSource.isPlaying) {
+            walkingSource.Play();
+        } else if (currentMovement.magnitude == 0) {
+            walkingSource.Stop();
         }
     }
 

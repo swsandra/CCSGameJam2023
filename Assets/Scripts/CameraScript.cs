@@ -14,7 +14,6 @@ public class CameraScript : MonoBehaviour
 
     [ContextMenu("ZoomIn")]
     public void ZoomIn() {
-        Debug.Log(player.localScale.y);
         StartCoroutine(.1f.Tweeng((p)=>transform.position=p, transform.position, new Vector3(player.position.x,player.position.y + 3 * player.localScale.y, -10)));
         StartCoroutine(.1f.Tweeng((s)=>cinemachineVirtualCamera.m_Lens.OrthographicSize=s, 5f, 2f));
     }

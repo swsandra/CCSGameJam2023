@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Cinemachine;
 
 [RequireComponent(typeof(Rigidbody2D))]
 
@@ -12,6 +13,7 @@ public class PlayerController : MonoBehaviour
     Rigidbody2D rb;
     PlayerInput input;
     SpriteRenderer spriteRenderer;
+    CinemachineImpulseSource impulse;
 
     [Header("Health")]
     int health = 3;
@@ -53,6 +55,7 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        impulse = transform.GetComponent<CinemachineImpulseSource>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         originalMaterial = spriteRenderer.material;
     }
@@ -64,6 +67,10 @@ public class PlayerController : MonoBehaviour
         if (canMove) {
             currentMovement = input.Player.Move.ReadValue<Vector2>();
         }
+    }
+
+    void shakeCamera() {
+        impulse.GenerateImpulse(0.5f);
     }
 
     void FixedUpdate() {
@@ -87,6 +94,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other) {
         if (!invulnerable && other.gameObject.tag == "Enemy") {
+            shakeCamera();
             health -= 1;
             Debug.Log(health);
             canMove = false;

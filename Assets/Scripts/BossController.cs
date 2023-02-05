@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+using Cinemachine;
 
 public class BossController : MonoBehaviour
 {
@@ -45,8 +46,8 @@ public class BossController : MonoBehaviour
             tentaclesDefeated = value;
             if (tentaclesDefeated >= tentaclesNeeded) {
                 if (tentacleCoroutine != null)
-                    Time.timeScale = 0.5f;
-                    FindObjectOfType<CameraScript>().ZoomIn();
+                    StartCoroutine(LastTentacleCoroutine());
+                    FindObjectOfType<CameraScript>().StopRumbling();
                     StopCoroutine(tentacleCoroutine);
                 // StartCoroutine(HideTentacles)
             }
@@ -98,11 +99,19 @@ public class BossController : MonoBehaviour
     float moveDuration;
     float topBound;
     SpriteRenderer faceSpriteRenderer;
-
+    [Space]
+    [Header("Lake")]
+    [SerializeField]
+    GameObject MidWater;
+    [SerializeField]
+    GameObject NoWater;
+    [SerializeField]
+    float lakeDuration;
 
     private void Start() {
         DivideRegions();
         faceSpriteRenderer = face.GetComponent<SpriteRenderer>();
+        face.transform.position = faceFinalPosition.position + (Vector3.up * topBound);
     }
 
     [ContextMenu("ExpanseAttack")]
@@ -183,6 +192,7 @@ public class BossController : MonoBehaviour
     }
 
     IEnumerator TentaclesAttackCoroutine() {
+        FindObjectOfType<CameraScript>().StartRumbling();
         float tentDuration = tentacles[0].GetComponent<Root>().idleDuration;
 
         for(int i = 0; i < tentacleRounds; i++) {
@@ -199,6 +209,15 @@ public class BossController : MonoBehaviour
             tent.GetComponent<Root>().health = tentaclesHealth;
         }
         TentaclesDefeated = 0;
+        FindObjectOfType<CameraScript>().StopRumbling();
+    }
+
+    IEnumerator LastTentacleCoroutine() {
+        Time.timeScale = 0.5f;
+        FindObjectOfType<CameraScript>().ZoomIn();
+        yield return new WaitForSeconds(1);
+        Time.timeScale = 1;
+        FindObjectOfType<CameraScript>().ZoomOut();
     }
 
     void DivideRegions(){
@@ -208,7 +227,7 @@ public class BossController : MonoBehaviour
         Vector3 screenBounds = cam.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, cam.transform.position.z));
         rightLimit = screenBounds.x + xOffset;
         leftLimit = (screenBounds.x*-1)+(camXOffset*2) - xOffset;
-        topBound = transform.GetComponent<SpriteRenderer>().bounds.size.y/2;
+        topBound = transform.GetComponent<SpriteRenderer>().bounds.size.y/4;
     }
 
     [ContextMenu("DolphinAttack")]
@@ -311,6 +330,28 @@ public class BossController : MonoBehaviour
         }
         face.transform.position = endPos;
         yield return null;
+    }
+
+    [ContextMenu("SecondPhase")]
+    void SecondPhase(){
+        faceSpriteRenderer.sprite = angryFaceSprite;
+        ShowMidWater();
+    }
+
+    [ContextMenu("ThirdPhase")]
+    void ThirdPhase(){
+        faceSpriteRenderer.sprite = angryFaceSprite;
+        ShowNoWater();
+    }
+
+    [ContextMenu("ShowMidWater")]
+    void ShowMidWater(){
+        StartCoroutine(lakeDuration.Tweeng((a)=>MidWater.GetComponent<SpriteRenderer>().color += new Color (0, 0, 0, a), 0f, 1f));
+    }
+
+    [ContextMenu("ShowNoWater")]
+    void ShowNoWater(){
+        StartCoroutine(lakeDuration.Tweeng((a)=>NoWater.GetComponent<SpriteRenderer>().color += new Color (0, 0, 0, a), 0f, 1f));
     }
 
     private void Update() {

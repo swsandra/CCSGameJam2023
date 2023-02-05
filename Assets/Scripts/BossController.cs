@@ -43,7 +43,9 @@ public class BossController : MonoBehaviour
         set {
             tentaclesDefeated = value;
             if (tentaclesDefeated >= tentaclesNeeded) {
-                if (tentacleCoroutine != null) 
+                if (tentacleCoroutine != null)
+                    Time.timeScale = 0.5f;
+                    FindObjectOfType<CameraScript>().ZoomIn();
                     StopCoroutine(tentacleCoroutine);
                 // StartCoroutine(HideTentacles)
             }

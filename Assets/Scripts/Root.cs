@@ -50,6 +50,7 @@ public class Root : MonoBehaviour
     }
 
     IEnumerator DieRoutine() {
+        boss.TentaclesDefeated += 1;
         float t = 0f;
         while(t < 1) {
             sr.material.color = Color.Lerp(Color.white, Color.black, t);
@@ -58,7 +59,6 @@ public class Root : MonoBehaviour
             }
             yield return new WaitForEndOfFrame();
         }
-        boss.TentaclesDefeated += 1;
         yield return new WaitForEndOfFrame();
         gameObject.SetActive(false);
     }

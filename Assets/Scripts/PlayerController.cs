@@ -163,6 +163,7 @@ public class PlayerController : MonoBehaviour
             if (attackBoss) {
                 anim.SetTrigger("AttackUp");
                 Debug.Log("HIT: BOSS");
+                shakeCamera();
                 FindObjectOfType<BossController>().Damage();
             }
             else {

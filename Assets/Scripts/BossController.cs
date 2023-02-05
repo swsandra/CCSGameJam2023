@@ -518,10 +518,14 @@ public class BossController : MonoBehaviour
         sr.material = originalMaterial;
     }
 
+    public void GameEnds(){
+        StopAllCoroutines();
+    }
+
     void Death(){
         invulnerable = true;
         ShowDeadFace();
-        StopAllCoroutines();
+        GameEnds();
     }
 
     private void Update() {

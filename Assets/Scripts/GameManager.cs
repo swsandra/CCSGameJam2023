@@ -41,12 +41,14 @@ public class GameManager : MonoBehaviour
     public void Win()
     {
         Player.GetComponent<PlayerController>().enabled = false;
+        Boss.GetComponent<BossController>().GameEnds();
         UIManager.instance.ShowWin();
     }
 
     public void GameOver()
     {
         Boss.GetComponent<BossController>().ShowHappyFace();
+        Boss.GetComponent<BossController>().GameEnds();
         Player.GetComponent<PlayerController>().enabled = false;
         UIManager.instance.ShowGameOver();
     }

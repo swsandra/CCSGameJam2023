@@ -124,8 +124,8 @@ public class PlayerController : MonoBehaviour
                 anim.enabled = false;
                 GetComponent<Collider2D>().enabled = false;
                 spriteRenderer.sprite = hitSprite;
-                return;
                 GameManager.instance.GameOver();
+                return;
             } else {
                 AudioSource.PlayClipAtPoint(damage, new Vector3(0,0,-10));
             }

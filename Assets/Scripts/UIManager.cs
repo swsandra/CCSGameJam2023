@@ -40,11 +40,13 @@ public class UIManager : MonoBehaviour
 
     public void ShowWin()
     {
+        UIScreen.SetActive(false);
         winScreen.SetActive(true);
     }
 
     public void ShowGameOver()
     {
+        UIScreen.SetActive(false);
         gameOverScreen.SetActive(true);
     }
 }

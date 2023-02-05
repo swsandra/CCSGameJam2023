@@ -4493,6 +4493,7 @@ MonoBehaviour:
   earthquakeSource: {fileID: 1255322946}
   rootRising: {fileID: 1255322947}
   show: {fileID: 8300000, guid: 99bdada18ed68444a83815da65580dd5, type: 3}
+  damage: {fileID: 8300000, guid: a7bf682c0d3cf8b4faf462353a0a0457, type: 3}
   lastTentacle: {fileID: 1255322948}
   healthBar: {fileID: 293180459}
   maxHealth: 15

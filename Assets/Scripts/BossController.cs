@@ -20,6 +20,8 @@ public class BossController : MonoBehaviour
     [SerializeField]
     AudioClip show;
     [SerializeField]
+    AudioClip damage;
+    [SerializeField]
     AudioSource lastTentacle;
     [Space]
     [Header("Damage")]
@@ -506,6 +508,7 @@ public class BossController : MonoBehaviour
     public void Damage() {
         if (invulnerable) return;
         health -= 1;
+        AudioSource.PlayClipAtPoint(damage, new Vector3(0,0,0));
         healthBar.localScale = new Vector3((float)health / maxHealth, healthBar.localScale.y, healthBar.localScale.z);
         if (health < 0) {
             return;

@@ -2407,6 +2407,7 @@ MonoBehaviour:
   flashMaterial: {fileID: 2100000, guid: 2934dc2d0502cc24f8fff36c8d0b396e, type: 2}
   canAttack: 0
   attackCooldown: 3
+  attacksBeforeTentacles: 3
   maxDivides: 5
   divideCooldown: 0.5
   pivot: {fileID: 1744065981}

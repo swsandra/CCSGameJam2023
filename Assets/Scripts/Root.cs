@@ -13,6 +13,10 @@ public class Root : MonoBehaviour
     BossController boss;
     [SerializeField] float deathDuration;
     [SerializeField] RectTransform healthBar;
+    [Header("Sounds")]
+    [SerializeField] AudioClip damage;
+    [SerializeField] AudioClip show;
+    [SerializeField] AudioClip die;
 
     [Header("Damage")]
     [SerializeField] float flashDuration = .09f;
@@ -55,11 +59,14 @@ public class Root : MonoBehaviour
 
     IEnumerator damageRoutine() {
         sr.material = flashMaterial;
+        AudioSource.PlayClipAtPoint(damage, transform.position);
         yield return new WaitForSeconds(flashDuration);
         sr.material = originalMaterial;
     }
 
     IEnumerator DieRoutine() {
+        AudioSource.PlayClipAtPoint(damage, transform.position);
+        AudioSource.PlayClipAtPoint(die, transform.position);
         boss.TentaclesDefeated += 1;
         col.enabled = false;
         float t = 0f;
@@ -85,6 +92,10 @@ public class Root : MonoBehaviour
         if (col != null)
             col.enabled = false;
         StartCoroutine(HideRoutine());
+    }
+
+    public void ShowSound() {
+        AudioSource.PlayClipAtPoint(show, transform.position);
     }
 
     private void OnDisable() {

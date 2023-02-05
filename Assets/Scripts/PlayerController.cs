@@ -33,7 +33,8 @@ public class PlayerController : MonoBehaviour
 
     [Header("Attack")]
     [SerializeField] Transform attackPoint;
-    [SerializeField] float attackOffset = 1f;
+    [SerializeField] float attackOffsetX = 1f;
+    [SerializeField] float attackOffsetY = 1f;
     [SerializeField] float attackRange = 0.5f;
     [SerializeField] LayerMask enemyLayers;
     [SerializeField] float attackDelay = 1f;
@@ -88,7 +89,7 @@ public class PlayerController : MonoBehaviour
 
         // AttackPoint move and rotate
         if (currentMovement.magnitude != 0 && canAttack) {
-            attackPoint.localPosition = new Vector3(spriteRenderer.flipX ? -1 : 1, 0, 0).normalized * attackOffset;
+            attackPoint.localPosition = new Vector3(spriteRenderer.flipX ? -attackOffsetX : attackOffsetX, attackOffsetY, 0);
         }
     }
 
@@ -142,7 +143,7 @@ public class PlayerController : MonoBehaviour
             if (attackBoss) {
                 anim.SetTrigger("AttackUp");
                 Debug.Log("HIT: BOSS");
-                // FindObjectOfType<BossController>().TakeDamage();
+                FindObjectOfType<BossController>().Damage();
             }
             else {
                 anim.SetTrigger("Attack");

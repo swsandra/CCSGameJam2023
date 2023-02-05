@@ -124,6 +124,7 @@ public class PlayerController : MonoBehaviour
                 anim.enabled = false;
                 GetComponent<Collider2D>().enabled = false;
                 spriteRenderer.sprite = hitSprite;
+                walkingSource.Stop();
                 GameManager.instance.GameOver();
                 return;
             } else {

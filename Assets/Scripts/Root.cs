@@ -77,6 +77,7 @@ public class Root : MonoBehaviour
         }
         sr.material.color = Color.white;
         sr.material = originalMaterial;
+        GetComponent<Animator>().enabled = true;
         StopAllCoroutines();
     }
 }

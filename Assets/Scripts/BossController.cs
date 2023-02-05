@@ -35,11 +35,9 @@ public class BossController : MonoBehaviour
     float movementTime;
     [SerializeField]
     float idleTime;
-    
     [Space]
     [Header("Tentacles Attack")]
     [SerializeField] int tentaclesDefeated;
-
     public int TentaclesDefeated {
         get { return tentaclesDefeated; }
         set {
@@ -59,9 +57,28 @@ public class BossController : MonoBehaviour
     [SerializeField] Transform bottomLeft;
     [SerializeField] Transform topRight;
     Coroutine tentacleCoroutine;
+    [Space]
+    [Header("Dolphin Attack")]
+    [SerializeField]
+    GameObject dolphinSidePrefab;
+    [SerializeField]
+    GameObject dolphinFrontPrefab;
+    [SerializeField]
+    int regions = 4;
+    [SerializeField]
+    float yStartPosition;
+    [SerializeField]
+    float maxFrontXPosition;
+    [SerializeField]
+    int maxDolphinsPerRegion = 4;
+    [SerializeField]
+    float dolphinCooldown = 0.8f;
+    float leftLimit;
+    float rightLimit;
 
 
     private void Start() {
+        DivideRegions();
     }
 
     [ContextMenu("ExpanseAttack")]
@@ -158,6 +175,67 @@ public class BossController : MonoBehaviour
             tent.GetComponent<Root>().health = tentaclesHealth;
         }
         TentaclesDefeated = 0;
+    }
+
+    void DivideRegions(){
+        Camera cam = Camera.main;
+        float camXOffset = cam.transform.position.x;
+        Vector3 screenBounds = cam.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, cam.transform.position.z));
+        // TODO: fix agregar un offset a los lados
+        rightLimit = screenBounds.x;
+        leftLimit = (screenBounds.x*-1)+(camXOffset*2);
+    }
+
+    [ContextMenu("DolphinAttack")]
+    void DolphinAttack(){
+        float currentLeft = leftLimit;
+        float partition_size = (Mathf.Abs(leftLimit)+Mathf.Abs(rightLimit))/regions;
+        float currentRight = currentLeft+partition_size;
+        Vector3 position;
+        Transform dolphin;
+        for (int i=0; i<regions; i++){
+            position = new Vector3(Random.Range(currentLeft, currentRight), yStartPosition, 0f);
+            dolphin = createDolphin(position, null);
+            StartCoroutine(DolphinOut(0, dolphin));
+            currentLeft = currentRight;
+            currentRight = currentLeft+partition_size;
+        }
+    }
+
+    Transform createDolphin(Vector3 position, Transform parent){
+        GameObject dolphinPrefab = Mathf.Abs(position.x) > maxFrontXPosition ? dolphinSidePrefab : dolphinFrontPrefab;
+        Transform child = Instantiate(dolphinPrefab, position, Quaternion.identity, parent).transform;
+        if (position.x > 0){
+            child.GetComponent<SpriteRenderer>().flipX = true;
+        }
+        return child;
+    }
+
+    IEnumerator DolphinOut(int recursion, Transform parent) {
+        if (recursion >= maxDolphinsPerRegion) {
+            yield return new WaitForSeconds(2);
+            StartCoroutine(DolphinBack(parent));
+            yield break;
+        }
+        yield return new WaitForSeconds(dolphinCooldown);
+        Vector3 position = parent.transform.position;
+        float distance = parent.GetComponent<SpriteRenderer>().bounds.size.x;
+        Vector3 director = parent.position.x >= 0 ? new Vector3(1,-1,0) : new Vector3(-1,-1,0);
+        position += Quaternion.Euler(0, 45, 0) * director * distance;
+        Transform child = createDolphin(position, parent);
+        StartCoroutine(DolphinOut(recursion + 1, child));
+    }
+
+    IEnumerator DolphinBack(Transform branch) {
+        branch.GetComponent<Animator>().Play("In");
+        yield return new WaitForSeconds(dolphinCooldown);
+        Destroy(branch.gameObject);
+
+        Transform parent = branch.parent;
+        if (!parent){
+            yield break;
+        }
+        StartCoroutine(DolphinBack(parent));
     }
 
     private void Update() {

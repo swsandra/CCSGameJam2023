@@ -7,7 +7,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: dolphin_root
+  m_Name: Out
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -59,10 +59,10 @@ AnimatorStateMachine:
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: -7426638883408423280}
-    m_Position: {x: 200, y: 0, z: 0}
+    m_Position: {x: 300, y: -40, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 7898500350392750780}
-    m_Position: {x: 235, y: 65, z: 0}
+    m_Position: {x: 370, y: 60, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -80,7 +80,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: FrontIn
+  m_Name: In
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []

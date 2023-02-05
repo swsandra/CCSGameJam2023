@@ -516,7 +516,6 @@ public class BossController : MonoBehaviour
         StartCoroutine(damageRoutine());
         if (health == 0) {
             StartCoroutine(Death());
-            GameManager.instance.Win();
         }else if (health <= healthPerPhase && phase == 2){ // Third phase
             ThirdPhase();
         }else if (health <= healthPerPhase*2 && phase == 1){ // Second phase
@@ -542,6 +541,7 @@ public class BossController : MonoBehaviour
         yield return new WaitForSeconds(1);
         Time.timeScale = 1;
         FindObjectOfType<CameraScript>().ZoomOut();
+        GameManager.instance.Win();
         ShowDeadFace();
         GameEnds();
     } 

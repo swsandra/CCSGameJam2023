@@ -15,8 +15,6 @@ public class GameManager : MonoBehaviour
     GameObject Boss;
     [SerializeField]
     GameObject Player;
-    [SerializeField]
-    GameObject UI;
 
     private void Start() {
         GetComponent<AudioSource>().clip = MenuSong;
@@ -29,7 +27,7 @@ public class GameManager : MonoBehaviour
         StartCoroutine(PlayGameSong());
         Player.GetComponent<PlayerController>().enabled = true;
         Boss.GetComponent<BossController>().enabled = true;
-        UI.SetActive(false);
+        UIManager.instance.HideTitle();
     }
  
     IEnumerator PlayGameSong()

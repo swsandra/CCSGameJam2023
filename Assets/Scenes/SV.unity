@@ -274,14 +274,26 @@ MonoBehaviour:
   pivot: {fileID: 0}
   rotationSpeed: 0.2
   rotationDuration: 10
+  sideTentaclePrefab: {fileID: 0}
   spawns: []
+  sideTentacleSpeed: 0
+  movementTime: 0
+  idleTime: 0
+  tentaclesDefeated: 0
   dolphinSidePrefab: {fileID: 3162644176829202113, guid: 16403910011cbc440875c451ae6c8ec6, type: 3}
   dolphinFrontPrefab: {fileID: 8637799805652527704, guid: 572f9d7a7ae54484eba17d8e04692197, type: 3}
   regions: 2
-  yStartPosition: 2.5
-  maxFrontXPosition: 0
-  maxDolphinsPerRegion: 1
+  yStartPosition: 2.7
+  maxFrontXPosition: 3
+  maxDolphinsPerRegion: 2
   dolphinCooldown: 0.8
+  tentaclesNeeded: 0
+  tentaclesHealth: 0
+  tentacleRounds: 0
+  tentacleSpawnDelay: 0
+  tentacles: []
+  bottomLeft: {fileID: 0}
+  topRight: {fileID: 0}
 --- !u!4 &641050765
 Transform:
   m_ObjectHideFlags: 0
@@ -451,6 +463,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   invulnerableDuration: 1
+  flashDuration: 0.09
+  hitSprite: {fileID: 0}
+  flashMaterial: {fileID: 0}
   speed: 5
   attackPoint: {fileID: 1093349512}
   attackOffset: 1

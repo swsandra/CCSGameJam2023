@@ -38,25 +38,6 @@ public class BossController : MonoBehaviour
     [Space]
     [Header("Tentacles Attack")]
     [SerializeField] int tentaclesDefeated;
-    [Space]
-    [Header("Dolphin Attack")]
-    [SerializeField]
-    GameObject dolphinSidePrefab;
-    [SerializeField]
-    GameObject dolphinFrontPrefab;
-    [SerializeField]
-    int regions = 4;
-    [SerializeField]
-    float yStartPosition;
-    [SerializeField]
-    float maxFrontXPosition;
-    [SerializeField]
-    int maxDolphinsPerRegion = 4;
-    [SerializeField]
-    float dolphinCooldown = 0.8f;
-    float leftLimit;
-    float rightLimit;
-
     public int TentaclesDefeated {
         get { return tentaclesDefeated; }
         set {
@@ -76,9 +57,28 @@ public class BossController : MonoBehaviour
     [SerializeField] Transform bottomLeft;
     [SerializeField] Transform topRight;
     Coroutine tentacleCoroutine;
+    [Space]
+    [Header("Dolphin Attack")]
+    [SerializeField]
+    GameObject dolphinSidePrefab;
+    [SerializeField]
+    GameObject dolphinFrontPrefab;
+    [SerializeField]
+    int regions = 4;
+    [SerializeField]
+    float yStartPosition;
+    [SerializeField]
+    float maxFrontXPosition;
+    [SerializeField]
+    int maxDolphinsPerRegion = 4;
+    [SerializeField]
+    float dolphinCooldown = 0.8f;
+    float leftLimit;
+    float rightLimit;
 
 
     private void Start() {
+        DivideRegions();
     }
 
     [ContextMenu("ExpanseAttack")]

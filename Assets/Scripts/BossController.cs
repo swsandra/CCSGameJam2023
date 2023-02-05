@@ -23,10 +23,25 @@ public class BossController : MonoBehaviour
     int health;
     [SerializeField]
     bool invulnerable;
-    [SerializeField] float flashDuration = .09f;
-    [SerializeField] Material flashMaterial;
+    [SerializeField]
+    float flashDuration = .09f;
+    [SerializeField]
+    Material flashMaterial;
     Material originalMaterial;
     int healthPerPhase = 15;
+    [Space]
+    [Header("Attack Parameters")]
+    [SerializeField]
+    bool canAttack;
+    public bool CanAttack {
+        get { return canAttack; }
+        set {
+            canAttack = value;
+        }
+    }
+    [SerializeField]
+    float attackCooldown;
+    Coroutine attackRoutine;
     [Header("Root Expansion Attack")]
     [Header("Division")]
     [SerializeField]
@@ -134,6 +149,27 @@ public class BossController : MonoBehaviour
         face.transform.position = faceFinalPosition.position + (Vector3.up * topBound);
         sr = GetComponent<SpriteRenderer>();
         originalMaterial = sr.material;
+        canAttack = true;
+        attackRoutine = null;
+    }
+
+    IEnumerator Attack(){
+        yield return new WaitForSeconds(attackCooldown);
+        Debug.Log("Attack cooldown finished");
+
+        Debug.Log("Selecting attack");
+        float rand = Random.Range(0f, 1f);
+        if (rand <= .25f){
+            ExpanseAttack();
+        }else if (rand <= .5f){
+            SideTentaclesAttack();
+        }else if (rand <= .75f){
+            TentaclesAttack();
+        }else {
+            DolphinAttack();
+        }
+        CanAttack = false;
+        attackRoutine = null;
     }
 
     [ContextMenu("ExpanseAttack")]
@@ -177,6 +213,7 @@ public class BossController : MonoBehaviour
         if (parent.name == "ExpansionPivot") {
             rotate = false;
             pivot.Rotate(Vector3.zero);
+            canAttack = true;
             yield break;
         } else {
            StartCoroutine(Contract(parent));
@@ -234,6 +271,7 @@ public class BossController : MonoBehaviour
         TentaclesDefeated = 0;
         FindObjectOfType<CameraScript>().StopRumbling();
         earthquakeSource.Stop();
+        canAttack = true;
     }
 
     IEnumerator LastTentacleCoroutine() {
@@ -308,6 +346,7 @@ public class BossController : MonoBehaviour
 
         Transform parent = branch.parent;
         if (!parent){
+            canAttack = true;
             yield break;
         }
         StartCoroutine(DolphinBack(parent));
@@ -426,6 +465,10 @@ public class BossController : MonoBehaviour
                 rotationDirection = 1;
             }
             pivot.Rotate(new Vector3(0,0,rotationSpeed * rotationDirection * Time.deltaTime));
+        }
+
+        if (canAttack && attackRoutine == null){
+            attackRoutine = StartCoroutine(Attack());
         }
     }
 }

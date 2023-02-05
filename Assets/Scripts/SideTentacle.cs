@@ -9,9 +9,11 @@ public class SideTentacle : MonoBehaviour
     public float speed;
     public float movementTime;
     public float idleTime;
+    BossController boss;
 
     void Start()
     {
+        boss = GameObject.FindObjectOfType<BossController>();
         StartCoroutine(TentacleMovement());
     }
 
@@ -29,5 +31,6 @@ public class SideTentacle : MonoBehaviour
         direction = initialDirection * -1;
         yield return new WaitForSeconds(movementTime);
         Destroy(gameObject);
+        boss.CanAttack = true;
     }
 }

@@ -37,6 +37,9 @@ public class BossController : MonoBehaviour
     [Header("DamagePhase")]
     [SerializeField] Transform[] tentacleBarrier;
     [SerializeField] Transform pusher;
+    [SerializeField] Vector3 pusherFinalPosition;
+    [SerializeField] float pusherDuration;
+    [SerializeField] float damagePhaseDuration;
     [Space]
     [Header("Attack Parameters")]
     [SerializeField]
@@ -88,10 +91,16 @@ public class BossController : MonoBehaviour
         set {
             tentaclesDefeated = value;
             if (tentaclesDefeated >= tentaclesNeeded) {
-                if (tentacleCoroutine != null)
+                if (tentacleCoroutine != null) {
                     StartCoroutine(LastTentacleCoroutine());
                     StopCoroutine(tentacleCoroutine);
-                // StartCoroutine(HideTentacles)
+                }
+                if (attackRoutine != null) {
+                    StopCoroutine(attackRoutine);
+                    attackRoutine = null;
+                    canAttack = false;
+                }
+                StartCoroutine(EnterDamagePhase());
             }
         }
     }
@@ -403,6 +412,13 @@ public class BossController : MonoBehaviour
         yield return new WaitForSeconds(1);
         Vector3 finalPosition = faceFinalPosition.position + (Vector3.up * topBound);
         StartCoroutine(MoveFaceCoroutine(face.transform.position, finalPosition, moveDuration));
+
+        StartCoroutine(pusherDuration.Tweeng((v)=> pusher.localPosition=v, Vector3.zero, pusherFinalPosition));
+        yield return new WaitForSeconds(pusherDuration);
+        foreach(Transform tent in tentacleBarrier) {
+            tent.gameObject.SetActive(true);
+        }
+        pusher.localPosition = Vector3.zero;
     }
 
     [ContextMenu("ShowHappyFace")]
@@ -429,6 +445,26 @@ public class BossController : MonoBehaviour
         }
         face.transform.position = endPos;
         yield return null;
+    }
+
+    [ContextMenu("Enter Damage")]
+    void DamagePhase() {
+        TentaclesDefeated = tentaclesNeeded;
+    }
+
+    IEnumerator EnterDamagePhase() {
+        foreach(Transform tent in tentacleBarrier) {
+            tent.GetComponent<Animator>().SetTrigger("Hide");
+        }
+        yield return new WaitForSeconds(.5f);
+        foreach(Transform tent in tentacleBarrier) {
+            tent.gameObject.SetActive(false);
+        }
+        ShowWeakFace();
+
+        yield return new WaitForSeconds(damagePhaseDuration);
+
+        HideWeakFace();
     }
 
     [ContextMenu("SecondPhase")]

@@ -754,6 +754,14 @@ MonoBehaviour:
   - {fileID: 325421815}
   bottomLeft: {fileID: 1906960662}
   topRight: {fileID: 1544426214}
+  dolphinSidePrefab: {fileID: 0}
+  dolphinFrontPrefab: {fileID: 0}
+  regions: 4
+  yStartPosition: 0
+  maxFrontXPosition: 0
+  xOffset: 0
+  maxDolphinsPerRegion: 4
+  dolphinCooldown: 0.8
 --- !u!212 &1017228762
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1039,6 +1047,10 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5445028310631620867, guid: dd6b53977c9e2a8428192d67425bb156, type: 3}
       propertyPath: health
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5445028310631620867, guid: dd6b53977c9e2a8428192d67425bb156, type: 3}
+      propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5445028310631620867, guid: dd6b53977c9e2a8428192d67425bb156, type: 3}
@@ -1050,12 +1062,24 @@ PrefabInstance:
       value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 5445028310631620892, guid: dd6b53977c9e2a8428192d67425bb156, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5445028310631620892, guid: dd6b53977c9e2a8428192d67425bb156, type: 3}
       propertyPath: m_SpriteTilingProperty.pivot.x
       value: 0.49407312
       objectReference: {fileID: 0}
     - target: {fileID: 5445028310631620892, guid: dd6b53977c9e2a8428192d67425bb156, type: 3}
       propertyPath: m_SpriteTilingProperty.pivot.y
       value: 0.05903695
+      objectReference: {fileID: 0}
+    - target: {fileID: 5445028310631620892, guid: dd6b53977c9e2a8428192d67425bb156, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.x
+      value: 7.44
+      objectReference: {fileID: 0}
+    - target: {fileID: 5445028310631620892, guid: dd6b53977c9e2a8428192d67425bb156, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.y
+      value: 15.2
       objectReference: {fileID: 0}
     - target: {fileID: 5445028310631620893, guid: dd6b53977c9e2a8428192d67425bb156, type: 3}
       propertyPath: m_RootOrder

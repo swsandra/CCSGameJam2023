@@ -493,7 +493,7 @@ public class BossController : MonoBehaviour
         }
 
         if (canAttack && attackRoutine == null){
-            // attackRoutine = StartCoroutine(Attack());
+            attackRoutine = StartCoroutine(Attack());
         }
     }
 }

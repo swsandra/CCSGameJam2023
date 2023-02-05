@@ -42,6 +42,9 @@ public class BossController : MonoBehaviour
     }
     [SerializeField]
     float attackCooldown;
+    [SerializeField]
+    int attacksBeforeTentacles;
+    int attacksCount;
     Coroutine attackRoutine;
     [Header("Root Expansion Attack")]
     [Header("Division")]
@@ -151,6 +154,7 @@ public class BossController : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         originalMaterial = sr.material;
         canAttack = true;
+        attacksCount = 0;
         attackRoutine = null;
     }
 
@@ -158,17 +162,23 @@ public class BossController : MonoBehaviour
         yield return new WaitForSeconds(attackCooldown);
         Debug.Log("Attack cooldown finished");
 
-        Debug.Log("Selecting attack");
-        float rand = Random.Range(0f, 1f);
-        if (rand <= .25f){
-            ExpanseAttack();
-        }else if (rand <= .5f){
-            SideTentaclesAttack();
-        }else if (rand <= .75f){
+        if (attacksCount < attacksBeforeTentacles){
+            Debug.Log("Selecting random attack");
+            float rand = Random.Range(0f, 1f);
+            if (rand <= .33f){
+                ExpanseAttack();
+            }else if (rand <= .66f){
+                SideTentaclesAttack();
+            }else {
+                DolphinAttack();
+            }
+            attacksCount += 1;
+        }else{
+            Debug.Log("Selecting tentacle attack");
             TentaclesAttack();
-        }else {
-            DolphinAttack();
+            attacksCount = 0;
         }
+
         CanAttack = false;
         attackRoutine = null;
     }

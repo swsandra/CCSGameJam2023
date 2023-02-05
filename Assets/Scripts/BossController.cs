@@ -326,8 +326,8 @@ public class BossController : MonoBehaviour
         float camXOffset = cam.transform.position.x;
         float camYOffset = cam.transform.position.y;
         Vector3 screenBounds = cam.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, cam.transform.position.z));
-        rightLimit = screenBounds.x + xOffset;
-        leftLimit = (screenBounds.x*-1)+(camXOffset*2) - xOffset;
+        rightLimit = screenBounds.x - xOffset;
+        leftLimit = (screenBounds.x*-1)+(camXOffset*2) + xOffset;
         topBound = transform.GetComponent<SpriteRenderer>().bounds.size.y/4;
     }
 
@@ -410,6 +410,7 @@ public class BossController : MonoBehaviour
 
     IEnumerator HideWeakFaceCoroutine(){
         invulnerable = true;
+        canAttack = true;
         faceSpriteRenderer.sprite = angryFaceSprite;
         yield return new WaitForSeconds(1);
         Vector3 finalPosition = faceFinalPosition.position + (Vector3.up * topBound);

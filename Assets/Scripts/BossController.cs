@@ -471,6 +471,9 @@ public class BossController : MonoBehaviour
     [ContextMenu("SecondPhase")]
     void SecondPhase(){
         phase = 2;
+        attacksBeforeTentacles += 1;
+        attackCooldown -= 1;
+        regions += 2;
         StartCoroutine(HideWeakFaceCoroutine());
         ShowMidWater();
     }
@@ -478,6 +481,9 @@ public class BossController : MonoBehaviour
     [ContextMenu("ThirdPhase")]
     void ThirdPhase(){
         phase = 3;
+        attacksBeforeTentacles += 1;
+        attackCooldown -= 1;
+        regions += 2;
         StartCoroutine(HideWeakFaceCoroutine());
         ShowNoWater();
     }

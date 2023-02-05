@@ -27,6 +27,29 @@ public class BossController : MonoBehaviour
     [Header("Side Tentacles Attack")]
     [SerializeField]
     GameObject[] spawns;
+    [Space]
+    [Header("Tentacles Attack")]
+    [SerializeField] int tentaclesDefeated;
+
+    public int TentaclesDefeated {
+        get { return tentaclesDefeated; }
+        set {
+            tentaclesDefeated = value;
+            if (tentaclesDefeated >= tentaclesNeeded) {
+                if (tentacleCoroutine != null) 
+                    StopCoroutine(tentacleCoroutine);
+                // StartCoroutine(HideTentacles)
+            }
+        }
+    }
+    [SerializeField] int tentaclesNeeded;
+    public int tentaclesHealth;
+    [SerializeField] int tentacleRounds;
+    [SerializeField] int tentacleSpawnDelay;
+    [SerializeField] Transform[] tentacles;
+    [SerializeField] Transform bottomLeft;
+    [SerializeField] Transform topRight;
+    Coroutine tentacleCoroutine;
 
     private void Start() {
 
@@ -95,6 +118,30 @@ public class BossController : MonoBehaviour
     //         }
     //     }
     // }
+
+    [ContextMenu("TentaclesAttack")]
+    void TentaclesAttack() {
+        tentacleCoroutine = StartCoroutine(TentaclesAttackCoroutine());
+    }
+
+    IEnumerator TentaclesAttackCoroutine() {
+        float tentDuration = tentacles[0].GetComponent<Root>().idleDuration;
+
+        for(int i = 0; i < tentacleRounds; i++) {
+            for (int j = 0; j < tentacles.Length; j++) {
+                Transform tent = tentacles[j];
+                tent.position = new Vector3(Random.Range(bottomLeft.position.x, topRight.position.x), Random.Range(bottomLeft.position.y, topRight.position.y), 0);
+                tent.gameObject.SetActive(true);
+            }
+            yield return new WaitForSeconds(tentDuration + tentacleSpawnDelay);
+        }
+
+        // If not killed, set health back to full
+        foreach(Transform tent in tentacles) {
+            tent.GetComponent<Root>().health = tentaclesHealth;
+        }
+        TentaclesDefeated = 0;
+    }
 
     private void Update() {
         if (rotate) {

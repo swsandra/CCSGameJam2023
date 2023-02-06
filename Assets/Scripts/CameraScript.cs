@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 
@@ -16,6 +14,11 @@ public class CameraScript : MonoBehaviour
     public void ZoomIn() {
         StartCoroutine(.1f.Tweeng((p)=>transform.position=p, transform.position, new Vector3(player.position.x,player.position.y + 3 * player.localScale.y, -10)));
         StartCoroutine(.1f.Tweeng((s)=>cinemachineVirtualCamera.m_Lens.OrthographicSize=s, 5f, 2f));
+    }
+
+    [ContextMenu("CameraToTree")]
+    public void CameraToTree() {
+        StartCoroutine(.5f.Tweeng((p)=>transform.position=p, transform.position, new Vector3(0,3.5f, -10)));
     }
 
     [ContextMenu("ZoomOut")]

@@ -1,38 +1,28 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
-using Cinemachine;
 
 public class BossController : MonoBehaviour
 {
-    [SerializeField]
-    GameObject rootPrefab;
+    [SerializeField] GameObject rootPrefab;
     SpriteRenderer sr;
-    [SerializeField]
-    int phase;
+    [SerializeField] int phase;
     [Space]
     [Header("Sounds")]
-    [SerializeField]
-    AudioSource earthquakeSource;
-    [SerializeField]
-    AudioSource rootRising;
-    [SerializeField]
-    AudioClip show;
-    [SerializeField]
-    AudioSource lastTentacle;
+    [SerializeField] AudioSource earthquakeSource;
+    [SerializeField] AudioSource rootRising;
+    [SerializeField] AudioClip show;
+    [SerializeField] AudioClip damage;
+    [SerializeField] AudioSource death;
+    [SerializeField] AudioSource lastTentacle;
     [Space]
     [Header("Damage")]
     [SerializeField] RectTransform healthBar;
     public int maxHealth = 15;
-    [SerializeField]
-    int health;
-    [SerializeField]
-    bool invulnerable;
-    [SerializeField]
-    float flashDuration = .09f;
-    [SerializeField]
-    Material flashMaterial;
+    [SerializeField] int health;
+    [SerializeField] bool invulnerable;
+    [SerializeField] float flashDuration = .09f;
+    [SerializeField] Material flashMaterial;
     Material originalMaterial;
     int healthPerPhase = 15;
     [Header("DamagePhase")]
@@ -43,50 +33,75 @@ public class BossController : MonoBehaviour
     [SerializeField] float damagePhaseDuration;
     [Space]
     [Header("Attack Parameters")]
-    [SerializeField]
-    bool canAttack;
+    [SerializeField] bool canAttack;
+    [SerializeField] float attackCooldown;
+    [SerializeField] int attacksBeforeTentacles;
+    int attacksCount;
+    Coroutine attackRoutine;
+    [Header("Root Expansion Attack")]
+    [Header("Division")]
+    [SerializeField] int maxDivides = 5;
+    [SerializeField] float divideCooldown = 0.4f;
+    [Header("Rotation")]
+    [SerializeField] Transform pivot;
+    [SerializeField] float rotationSpeed = 0.2f;
+    [SerializeField] int rotationDuration = 10;
+    float rotationDirection = 1;
+    bool rotate;
+    [Space]
+    [Header("Side Tentacles Attack")]
+    [SerializeField] GameObject sideTentaclePrefab;
+    [SerializeField] Transform[] spawns;
+    [SerializeField] float sideTentacleSpeed;
+    [SerializeField] float movementTime;
+    [SerializeField] float idleTime;
+    [Space]
+    [Header("Tentacles Attack")]
+    [SerializeField] int tentaclesDefeated;
+    [SerializeField] int tentaclesNeeded;
+    public int tentaclesHealth;
+    [SerializeField] int tentacleRounds;
+    [SerializeField] int tentacleSpawnDelay;
+    [SerializeField] Transform[] tentacles;
+    [SerializeField] Transform bottomLeft;
+    [SerializeField] Transform topRight;
+    Coroutine tentacleCoroutine;
+    [Space]
+    [Header("Dolphin Attack")]
+    [SerializeField] GameObject dolphinSidePrefab;
+    [SerializeField] GameObject dolphinFrontPrefab;
+    [SerializeField] int regions = 4;
+    [SerializeField] float yStartPosition;
+    [SerializeField] float maxFrontXPosition;
+    [SerializeField] float xOffset;
+    [SerializeField] int maxDolphinsPerRegion = 4;
+    [SerializeField] float dolphinCooldown = 0.8f;
+    float leftLimit;
+    float rightLimit;
+    [Space]
+    [Header("Faces")]
+    [SerializeField] Sprite weakFaceSprite;
+    [SerializeField] Sprite angryFaceSprite;
+    [SerializeField] Sprite happyFaceSprite;
+    [SerializeField] Sprite deadFaceSprite;
+    [SerializeField] Transform faceFinalPosition;
+    [SerializeField] GameObject face;
+    [SerializeField] float moveDuration;
+    float topBound;
+    SpriteRenderer faceSpriteRenderer;
+    [Space]
+    [Header("Lake")]
+    [SerializeField] GameObject MidWater;
+    [SerializeField] GameObject NoWater;
+    [SerializeField] float lakeDuration;
+
     public bool CanAttack {
         get { return canAttack; }
         set {
             canAttack = value;
         }
     }
-    [SerializeField]
-    float attackCooldown;
-    [SerializeField]
-    int attacksBeforeTentacles;
-    int attacksCount;
-    Coroutine attackRoutine;
-    [Header("Root Expansion Attack")]
-    [Header("Division")]
-    [SerializeField]
-    int maxDivides = 5;
-    [SerializeField]
-    float divideCooldown = 0.4f;
-    [Header("Rotation")]
-    [SerializeField]
-    Transform pivot;
-    [SerializeField]
-    float rotationSpeed = 0.2f;
-    [SerializeField]
-    int rotationDuration = 10;
-    float rotationDirection = 1;
-    bool rotate;
-    [Space]
-    [Header("Side Tentacles Attack")]
-    [SerializeField]
-    GameObject sideTentaclePrefab;
-    [SerializeField]    
-    Transform[] spawns;
-    [SerializeField]
-    float sideTentacleSpeed;
-    [SerializeField]
-    float movementTime;
-    [SerializeField]
-    float idleTime;
-    [Space]
-    [Header("Tentacles Attack")]
-    [SerializeField] int tentaclesDefeated;
+
     public int TentaclesDefeated {
         get { return tentaclesDefeated; }
         set {
@@ -106,60 +121,6 @@ public class BossController : MonoBehaviour
             }
         }
     }
-    [SerializeField] int tentaclesNeeded;
-    public int tentaclesHealth;
-    [SerializeField] int tentacleRounds;
-    [SerializeField] int tentacleSpawnDelay;
-    [SerializeField] Transform[] tentacles;
-    [SerializeField] Transform bottomLeft;
-    [SerializeField] Transform topRight;
-    Coroutine tentacleCoroutine;
-    [Space]
-    [Header("Dolphin Attack")]
-    [SerializeField]
-    GameObject dolphinSidePrefab;
-    [SerializeField]
-    GameObject dolphinFrontPrefab;
-    [SerializeField]
-    int regions = 4;
-    [SerializeField]
-    float yStartPosition;
-    [SerializeField]
-    float maxFrontXPosition;
-    [SerializeField]
-    float xOffset;
-    [SerializeField]
-    int maxDolphinsPerRegion = 4;
-    [SerializeField]
-    float dolphinCooldown = 0.8f;
-    float leftLimit;
-    float rightLimit;
-    [Space]
-    [Header("Faces")]
-    [SerializeField]
-    Sprite weakFaceSprite;
-    [SerializeField]
-    Sprite angryFaceSprite;
-    [SerializeField]
-    Sprite happyFaceSprite;
-    [SerializeField]
-    Sprite deadFaceSprite;
-    [SerializeField]
-    Transform faceFinalPosition;
-    [SerializeField]
-    GameObject face;
-    [SerializeField]
-    float moveDuration;
-    float topBound;
-    SpriteRenderer faceSpriteRenderer;
-    [Space]
-    [Header("Lake")]
-    [SerializeField]
-    GameObject MidWater;
-    [SerializeField]
-    GameObject NoWater;
-    [SerializeField]
-    float lakeDuration;
 
     private void Start() {
         phase = 1;
@@ -178,10 +139,8 @@ public class BossController : MonoBehaviour
 
     IEnumerator Attack(){
         yield return new WaitForSeconds(attackCooldown);
-        Debug.Log("Attack cooldown finished");
 
         if (attacksCount < attacksBeforeTentacles){
-            Debug.Log("Selecting random attack");
             float rand = Random.Range(0f, 1f);
             if (rand <= .33f && phase != 1){
                 ExpanseAttack();
@@ -192,7 +151,6 @@ public class BossController : MonoBehaviour
             }
             attacksCount += 1;
         }else{
-            Debug.Log("Selecting tentacle attack");
             TentaclesAttack();
             attacksCount = 0;
         }
@@ -305,7 +263,6 @@ public class BossController : MonoBehaviour
             tent.GetComponent<Root>().health = tentaclesHealth;
             tent.GetComponent<Root>().healthBar.localScale = new Vector3(1,1,1);
         }
-        TentaclesDefeated = 0;
         FindObjectOfType<CameraScript>().StopRumbling();
         earthquakeSource.Stop();
         canAttack = true;
@@ -315,11 +272,18 @@ public class BossController : MonoBehaviour
         Time.timeScale = 0.5f;
         FindObjectOfType<CameraScript>().ZoomIn();
         lastTentacle.Play();
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(0.2f);
         Time.timeScale = 1;
+        FindObjectOfType<CameraScript>().CameraToTree();
+        yield return new WaitForSeconds(0.5f);
         FindObjectOfType<CameraScript>().ZoomOut();
         earthquakeSource.Stop();
         FindObjectOfType<CameraScript>().StopRumbling();
+        yield return new WaitForSeconds(2);
+        foreach(Transform tent in tentacles) {
+            tent.GetComponent<Root>().health = tentaclesHealth;
+            tent.GetComponent<Root>().healthBar.localScale = new Vector3(1,1,1);
+        }
     }
 
     void DivideRegions(){
@@ -436,8 +400,6 @@ public class BossController : MonoBehaviour
     [ContextMenu("ShowDeadFace")]
     public void ShowDeadFace(){
         faceSpriteRenderer.sprite = deadFaceSprite;
-        // face.transform.position = faceFinalPosition.position + (Vector3.up * topBound);
-        // StartCoroutine(MoveFaceCoroutine(face.transform.position, faceFinalPosition.position, moveDuration));
     }
 
     IEnumerator MoveFaceCoroutine(Vector3 startPos, Vector3 endPos, float duration) {
@@ -476,8 +438,9 @@ public class BossController : MonoBehaviour
     void SecondPhase(){
         phase = 2;
         attacksBeforeTentacles += 1;
-        // attackCooldown -= 1;
         regions += 2;
+        tentaclesNeeded += 1;
+        tentacleRounds += 1;
         StartCoroutine(HideWeakFaceCoroutine());
         ShowMidWater();
     }
@@ -486,8 +449,9 @@ public class BossController : MonoBehaviour
     void ThirdPhase(){
         phase = 3;
         attacksBeforeTentacles += 1;
-        // attackCooldown -= 1;
         regions += 2;
+        tentaclesNeeded += 1;
+        tentacleRounds += 1;
         StartCoroutine(HideWeakFaceCoroutine());
         ShowNoWater();
     }
@@ -506,21 +470,31 @@ public class BossController : MonoBehaviour
     public void Damage() {
         if (invulnerable) return;
         health -= 1;
+        AudioSource.PlayClipAtPoint(damage, new Vector3(0,0,0));
         healthBar.localScale = new Vector3((float)health / maxHealth, healthBar.localScale.y, healthBar.localScale.z);
         if (health < 0) {
             return;
         }
         health = Mathf.Clamp(health, 0, health);
-        // healthBar.localScale = new Vector3((float)health / boss.tentaclesHealth, healthBar.localScale.y, healthBar.localScale.z);
-        Debug.Log("Continue current phase "+phase);
         StartCoroutine(damageRoutine());
         if (health == 0) {
             StartCoroutine(Death());
         }else if (health <= healthPerPhase && phase == 2){ // Third phase
+            StartCoroutine(passPhaseCoroutine());
             ThirdPhase();
         }else if (health <= healthPerPhase*2 && phase == 1){ // Second phase
+            StartCoroutine(passPhaseCoroutine());
             SecondPhase();
         }
+    }
+
+    IEnumerator passPhaseCoroutine() {
+        Time.timeScale = 0.5f;
+        FindObjectOfType<CameraScript>().ZoomIn();
+        lastTentacle.Play();
+        yield return new WaitForSeconds(1);
+        Time.timeScale = 1;
+        FindObjectOfType<CameraScript>().ZoomOut();
     }
 
     IEnumerator damageRoutine() {
@@ -534,6 +508,7 @@ public class BossController : MonoBehaviour
     }
 
     IEnumerator Death(){
+        death.Play();
         invulnerable = true;
         Time.timeScale = 0.5f;
         FindObjectOfType<CameraScript>().ZoomIn();

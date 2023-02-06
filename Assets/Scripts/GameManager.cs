@@ -7,20 +7,13 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
-    [SerializeField]
-    AudioClip MenuSong;
-    [SerializeField]
-    AudioClip GameSongIntro;
-    [SerializeField]
-    AudioClip GameSongLoop;
-    [SerializeField]
-    AudioClip WinSong;
-    [SerializeField]
-    AudioClip FailSong;
-    [SerializeField]
-    GameObject Boss;
-    [SerializeField]
-    GameObject Player;
+    [SerializeField] AudioClip MenuSong;
+    [SerializeField] AudioClip GameSongIntro;
+    [SerializeField] AudioClip GameSongLoop;
+    [SerializeField] AudioClip WinSong;
+    [SerializeField] AudioClip FailSong;
+    [SerializeField] GameObject Boss;
+    [SerializeField] GameObject Player;
 
     private void Awake() {
         if (instance == null) {

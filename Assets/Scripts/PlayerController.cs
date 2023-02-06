@@ -15,14 +15,10 @@ public class PlayerController : MonoBehaviour
     SpriteRenderer spriteRenderer;
     CinemachineImpulseSource impulse;
     [Header("Sounds")]
-    [SerializeField]
-    AudioSource walkingSource;
-    [SerializeField]
-    AudioClip swing;
-    [SerializeField]
-    AudioClip damage;
-    [SerializeField]
-    AudioClip dead;
+    [SerializeField] AudioSource walkingSource;
+    [SerializeField] AudioClip swing;
+    [SerializeField] AudioClip damage;
+    [SerializeField] AudioClip dead;
     [Header("Health")]
     [SerializeField] float invulnerableDuration = 1f;
     public int health = 3;
@@ -54,9 +50,6 @@ public class PlayerController : MonoBehaviour
 
     private void Awake() {
         input = new PlayerInput();
-
-        // input.Player.Move.performed += Movement;
-
         input.Player.Fire.performed += Attack;
         health = maxHealth;
     }

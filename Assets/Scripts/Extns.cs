@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public static class Extns
-    {
+{
     public static IEnumerator Tweeng( this float duration,
-               System.Action<float> var, float aa, float zz )
-        {
+        System.Action<float> var, float aa, float zz )
+    {
         float sT = Time.time;
         float eT = sT + duration;
         
@@ -18,11 +18,11 @@ public static class Extns
             }
         
         var(zz);
-        }
+    }
 
     public static IEnumerator Tweeng( this float duration,
-               System.Action<Vector3> var, Vector3 aa, Vector3 zz )
-        {
+        System.Action<Vector3> var, Vector3 aa, Vector3 zz )
+    {
         float sT = Time.time;
         float eT = sT + duration;
         
@@ -34,5 +34,5 @@ public static class Extns
             }
         
         var(zz);
-        }
+    }
 }

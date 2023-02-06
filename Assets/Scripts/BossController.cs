@@ -313,10 +313,6 @@ public class BossController : MonoBehaviour
     }
 
     IEnumerator LastTentacleCoroutine() {
-        foreach(Transform tent in tentacles) {
-            tent.GetComponent<Root>().health = tentaclesHealth;
-            tent.GetComponent<Root>().healthBar.localScale = new Vector3(1,1,1);
-        }
         Time.timeScale = 0.5f;
         FindObjectOfType<CameraScript>().ZoomIn();
         lastTentacle.Play();
@@ -327,6 +323,11 @@ public class BossController : MonoBehaviour
         FindObjectOfType<CameraScript>().ZoomOut();
         earthquakeSource.Stop();
         FindObjectOfType<CameraScript>().StopRumbling();
+        yield return new WaitForSeconds(2);
+        foreach(Transform tent in tentacles) {
+            tent.GetComponent<Root>().health = tentaclesHealth;
+            tent.GetComponent<Root>().healthBar.localScale = new Vector3(1,1,1);
+        }
     }
 
     void DivideRegions(){
@@ -524,10 +525,21 @@ public class BossController : MonoBehaviour
         if (health == 0) {
             StartCoroutine(Death());
         }else if (health <= healthPerPhase && phase == 2){ // Third phase
+            StartCoroutine(passPhaseCoroutine());
             ThirdPhase();
         }else if (health <= healthPerPhase*2 && phase == 1){ // Second phase
+            StartCoroutine(passPhaseCoroutine());
             SecondPhase();
         }
+    }
+
+    IEnumerator passPhaseCoroutine() {
+        Time.timeScale = 0.5f;
+        FindObjectOfType<CameraScript>().ZoomIn();
+        lastTentacle.Play();
+        yield return new WaitForSeconds(1);
+        Time.timeScale = 1;
+        FindObjectOfType<CameraScript>().ZoomOut();
     }
 
     IEnumerator damageRoutine() {

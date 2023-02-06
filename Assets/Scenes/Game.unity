@@ -4545,7 +4545,7 @@ MonoBehaviour:
   pusherDuration: 1
   damagePhaseDuration: 7
   canAttack: 0
-  attackCooldown: 3
+  attackCooldown: 2
   attacksBeforeTentacles: 3
   maxDivides: 5
   divideCooldown: 0.5

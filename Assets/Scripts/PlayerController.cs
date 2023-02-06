@@ -113,7 +113,6 @@ public class PlayerController : MonoBehaviour
         if (!invulnerable && other.gameObject.tag == "Enemy") {
             shakeCamera();
             health = Mathf.Clamp(health-1, 0, 3);
-            Debug.Log(health);
             canMove = false;
             canAttack = false;
             currentMovement = Vector2.zero;
@@ -138,14 +137,12 @@ public class PlayerController : MonoBehaviour
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
-        Debug.Log("TriggerEnter");
         if (other.gameObject.tag == "BossTrigger") {
             attackBoss = true;
         }
     }
 
     private void OnTriggerExit2D(Collider2D other) {
-        Debug.Log("TriggerExit");
         if (other.gameObject.tag == "BossTrigger") {
             attackBoss = false;
         }
@@ -163,7 +160,6 @@ public class PlayerController : MonoBehaviour
             // Play Animation
             if (attackBoss) {
                 anim.SetTrigger("AttackUp");
-                Debug.Log("HIT: BOSS");
                 shakeCamera();
                 FindObjectOfType<BossController>().Damage();
             }
@@ -177,7 +173,6 @@ public class PlayerController : MonoBehaviour
                 }
                 // Damage
                 foreach(Collider2D enemy in hitEnemies) {
-                    Debug.Log("HIT: " + enemy.name);
                     enemy.gameObject.GetComponent<Root>().Damage();
                 }
             }

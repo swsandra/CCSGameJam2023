@@ -18,6 +18,11 @@ public class CameraScript : MonoBehaviour
         StartCoroutine(.1f.Tweeng((s)=>cinemachineVirtualCamera.m_Lens.OrthographicSize=s, 5f, 2f));
     }
 
+    [ContextMenu("CameraToTree")]
+    public void CameraToTree() {
+        StartCoroutine(.5f.Tweeng((p)=>transform.position=p, transform.position, new Vector3(0,3.5f, -10)));
+    }
+
     [ContextMenu("ZoomOut")]
     public void ZoomOut() {
         StartCoroutine(.8f.Tweeng((p)=>transform.position=p, transform.position, new Vector3(0,0,-10)));

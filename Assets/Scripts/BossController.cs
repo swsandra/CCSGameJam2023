@@ -22,6 +22,8 @@ public class BossController : MonoBehaviour
     [SerializeField]
     AudioClip damage;
     [SerializeField]
+    AudioSource death;
+    [SerializeField]
     AudioSource lastTentacle;
     [Space]
     [Header("Damage")]
@@ -180,10 +182,8 @@ public class BossController : MonoBehaviour
 
     IEnumerator Attack(){
         yield return new WaitForSeconds(attackCooldown);
-        Debug.Log("Attack cooldown finished");
 
         if (attacksCount < attacksBeforeTentacles){
-            Debug.Log("Selecting random attack");
             float rand = Random.Range(0f, 1f);
             if (rand <= .33f && phase != 1){
                 ExpanseAttack();
@@ -194,7 +194,6 @@ public class BossController : MonoBehaviour
             }
             attacksCount += 1;
         }else{
-            Debug.Log("Selecting tentacle attack");
             TentaclesAttack();
             attacksCount = 0;
         }
@@ -314,11 +313,17 @@ public class BossController : MonoBehaviour
     }
 
     IEnumerator LastTentacleCoroutine() {
+        foreach(Transform tent in tentacles) {
+            tent.GetComponent<Root>().health = tentaclesHealth;
+            tent.GetComponent<Root>().healthBar.localScale = new Vector3(1,1,1);
+        }
         Time.timeScale = 0.5f;
         FindObjectOfType<CameraScript>().ZoomIn();
         lastTentacle.Play();
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(0.2f);
         Time.timeScale = 1;
+        FindObjectOfType<CameraScript>().CameraToTree();
+        yield return new WaitForSeconds(0.5f);
         FindObjectOfType<CameraScript>().ZoomOut();
         earthquakeSource.Stop();
         FindObjectOfType<CameraScript>().StopRumbling();
@@ -515,7 +520,6 @@ public class BossController : MonoBehaviour
         }
         health = Mathf.Clamp(health, 0, health);
         // healthBar.localScale = new Vector3((float)health / boss.tentaclesHealth, healthBar.localScale.y, healthBar.localScale.z);
-        Debug.Log("Continue current phase "+phase);
         StartCoroutine(damageRoutine());
         if (health == 0) {
             StartCoroutine(Death());
@@ -537,6 +541,7 @@ public class BossController : MonoBehaviour
     }
 
     IEnumerator Death(){
+        death.Play();
         invulnerable = true;
         Time.timeScale = 0.5f;
         FindObjectOfType<CameraScript>().ZoomIn();

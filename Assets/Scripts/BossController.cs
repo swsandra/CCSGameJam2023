@@ -306,7 +306,6 @@ public class BossController : MonoBehaviour
             tent.GetComponent<Root>().health = tentaclesHealth;
             tent.GetComponent<Root>().healthBar.localScale = new Vector3(1,1,1);
         }
-        TentaclesDefeated = 0;
         FindObjectOfType<CameraScript>().StopRumbling();
         earthquakeSource.Stop();
         canAttack = true;
@@ -486,6 +485,8 @@ public class BossController : MonoBehaviour
         attacksBeforeTentacles += 1;
         // attackCooldown -= 1;
         regions += 2;
+        tentaclesNeeded += 1;
+        tentacleRounds += 1;
         StartCoroutine(HideWeakFaceCoroutine());
         ShowMidWater();
     }
@@ -496,6 +497,8 @@ public class BossController : MonoBehaviour
         attacksBeforeTentacles += 1;
         // attackCooldown -= 1;
         regions += 2;
+        tentaclesNeeded += 1;
+        tentacleRounds += 1;
         StartCoroutine(HideWeakFaceCoroutine());
         ShowNoWater();
     }
